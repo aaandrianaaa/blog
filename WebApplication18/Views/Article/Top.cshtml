@@ -1,0 +1,24 @@
+﻿@*@using Service.Models;
+@{
+    ViewData["Title"] = "Top";
+}
+@model List<Article>
+
+<h1>Top</h1>
+
+<table>
+    @foreach (var item in @Model)
+    {
+        <tr>
+
+            <td> <p> @item.Name </p> </td>
+            <td><p>@item.CategoryID</p></td>
+            <td><p>@item.Text</p></td>
+            <td><p>@item.Count</p></td>
+            <td><a href="/articles/@item.ID"> Select</a></td>
+            <td><a href="/articles/delete/@item.ID">DELETE</a></td>
+
+
+        </tr>
+    }
+</table>*@

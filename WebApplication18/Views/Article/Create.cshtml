@@ -1,0 +1,28 @@
+﻿@*@using Service.Models;
+@model Article
+
+@{
+    ViewData["Title"] = "Post";
+}
+
+<h1>Post</h1>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        @using (Html.BeginForm("Create", "Article", FormMethod.Post))
+        {
+            <div>@Html.LabelFor(m => m.Name)@Html.EditorFor(m => m.Name)</div>
+            <div>@Html.LabelFor(m => m.CategoryID)@Html.EditorFor(m => m.CategoryID)</div>
+            <div>@Html.LabelFor(m => m.Text)@Html.EditorFor(m => m.Text)</div>
+            <button type="submit">Submit</button>
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+

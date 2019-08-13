@@ -1,0 +1,26 @@
+﻿@*@using Service.Models;
+@{
+    ViewData["Title"] = "CategoryArticles";
+}
+@model List<Article>
+<h1>Articles: </h1>
+
+
+<table>
+    @foreach (var item in @Model)
+    {
+
+        <tr>
+
+            <td><p> @item.Name </p> </td>
+            <td><p>@item.CategoryID</p></td>
+            <td><p>@item.Text</p></td>
+            <td><a href="/Article/SelectArticle/@item.ID"> Select</a></td>
+
+
+        </tr>
+        }
+</table>*@
+
+
+

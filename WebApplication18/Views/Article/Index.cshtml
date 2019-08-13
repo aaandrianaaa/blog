@@ -1,0 +1,25 @@
+﻿@*@using Service.Models;
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model List<Article>
+<h1>New posts</h1>
+<body class="home">
+</body>
+
+<table>
+    @foreach (var item in @Model)
+    {
+        <tr>
+
+            <td> <p> @item.Name </p> </td>
+            <td><p>@item.CategoryID</p></td>
+            <td><p>@item.Text</p></td>
+            <td><a href="/articles/@item.ID"> Select</a></td>
+            <td><a href="/articles/delete/@item.ID">DELETE</a></td>
+
+
+        </tr>
+    }
+</table>*@
+
