@@ -32,13 +32,10 @@ namespace WebApi.Requests
         public string AboutUser { get; set; }
 
         [JsonProperty(PropertyName = "age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         [JsonProperty(PropertyName = "birthday_date")]
         [JsonConverter(typeof(UnixDateTimeConverter))]
-        public DateTime BirthdayDate { get; set; }
-        
-        
-
+        public DateTime? BirthdayDate { get; set; }
     }
 }

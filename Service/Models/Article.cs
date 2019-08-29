@@ -34,6 +34,7 @@ namespace Service.Models
         public int AuthorID { get; set; }
         [Column(name: "author")]
         public User Author { get; set; }
+        public List< Comment> Comment { get; set; }
 
     }
 }

@@ -10,11 +10,12 @@ namespace WebApi.Requests
     public class CreateConfirmRequest
     {
         [Required]
-        [JsonProperty(PropertyName = "number")]
-        public int Number { get; set; }
-        [Required]
         [JsonProperty(PropertyName = "email")]
         [DataType(DataType.EmailAddress, ErrorMessage = "E-mail is not valid")]
         public string Mail { get; set; }
+        [Required]
+        [JsonProperty(PropertyName = "number")]
+        public int Number { get; set; }
+      
     }
 }

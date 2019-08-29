@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Service.Interfaces;
 using Service.Models;
 using WebApi.Requests;
+using WebApi.ViewModel;
+using Service.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -29,6 +31,8 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
+
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserRequest request)
@@ -39,17 +43,17 @@ namespace WebApi.Controllers
             }
 
             var mapuser = AutoMapper.Mapper.Map<User>(request);
-            if (!await _userService.CreateAsync(mapuser))
+            if (await _userService.CreateAsync(mapuser))
             {
-                return BadRequest();
+                return Ok();
             }
 
-            return Ok();
+            return BadRequest();
         }
-
+    
         [AllowAnonymous]
-        [HttpPost("send")]
-        public async Task<IActionResult> SendEmail(EmailRequest request)
+        [HttpPost("confirm/resend")]
+        public async Task<IActionResult> ResendConfirmationMail(EmailRequest request)
         {
             if (await _userService.SendConfirmation(request.Mail))
                 return Ok();
@@ -57,8 +61,8 @@ namespace WebApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("cofirm")]
-        public async Task<IActionResult> Confirmt(CreateConfirmRequest request)
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmMail(CreateConfirmRequest request)
         {
             var mapconfirm = AutoMapper.Mapper.Map<Confirmation>(request);
             var result = await _userService.CofirmMail(mapconfirm);
@@ -66,15 +70,86 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
+
             return Ok();
         }
-        [Authorize(Roles = "Writer")]
-        [HttpGet]
-        public async Task<IActionResult> Role()
-        {
-            var role = User.Claims.ToList();
-            return Ok($"{User.Identity.Name}");
 
+        [Authorize(Roles = "Admin, Moderator")]
+        [HttpPost("change/role/{id}")]
+        public async Task<IActionResult> ChangeRole(int id, NewRoleRequest request)
+        {
+            var user_id = User.Claims.GetUserId();
+            if (user_id == null) return BadRequest();
+
+            if (await _userService.ChangeRole(id, request.Role, user_id.Value))
+                return Ok();
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var user_id = User.Claims.GetUserId();
+
+            if (user_id == null) return BadRequest();
+            if (await _userService.DeleteUser(user_id.Value)) return Ok();
+
+            return BadRequest();
+        }
+
+
+        [Authorize]
+        [HttpPost("pathc")]
+        public async Task<IActionResult> PatchUser(PatchUserRequest request)
+        {
+            var user_id = User.Claims.GetUserId();
+
+            if (user_id == null) return BadRequest();
+
+            var _mapUser = AutoMapper.Mapper.Map<User>(request);
+
+            if (await _userService.PatchUser(user_id.Value, _mapUser)) return Ok();
+
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserByID(int id)
+        {
+            var user = await _userService.GetUserByIDAsync(id);
+            if (user == null) return BadRequest();
+            var _mapUser = AutoMapper.Mapper.Map<ViewModel.UserView>(user);
+            return Ok(_mapUser);
+        }
+
+        [Authorize(Roles ="Moderator, Admin")]
+        [HttpPost("block/{id}")]
+        public async Task<IActionResult> BlockUser (int id)
+
+        {
+            if (!await _userService.BlockUserAsync(id)) return BadRequest();
+            return Ok();
+        }
+
+        [Authorize(Roles = "Moderator, Admin")]
+        [HttpPost("unblock/{id}")]
+        public async Task<IActionResult> UnBlockUser(int id)
+
+        {
+            if (!await _userService.UnBlockUser(id)) return BadRequest();
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("list")]
+        public async Task<IActionResult> UsersList([FromQuery]Paginating request)
+        {
+            
+            var users = await _userService.UsersList(request.Limit, request.Page);
+            var _mapUsers = AutoMapper.Mapper.Map<List<UsersView>>(users);
+            return Ok(_mapUsers);
         }
 
     }

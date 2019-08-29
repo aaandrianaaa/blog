@@ -17,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using Service.Implementations;
 using Service.Interfaces;
 using Service.Models;
+using Service.Repositories;
+using Service.ServiceCollections;
 using WebApi.Mapper;
 
 namespace WebApi
@@ -48,10 +50,10 @@ namespace WebApi
         {
             AutoMapperConfiguration.Configure();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDependencies();
 
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<BlogContext>(options => options.UseNpgsql(connection));
             services.Configure<TokenManagement>(Configuration.GetSection("tokenManagement"));
             var token = Configuration.GetSection("tokenManagement").Get<TokenManagement>();
             var secret = Encoding.ASCII.GetBytes(token.Secret);
@@ -74,11 +76,6 @@ namespace WebApi
                     ValidateAudience = false
                 };
             });
-
-            services.AddScoped<IAuthenticateService, TokenAuthenticationService>();
-            services.AddScoped<IUserManagementService, UserManagementService>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IArticleService, ArticleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

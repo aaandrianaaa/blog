@@ -49,14 +49,12 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> ForgotPassword(EmailRequest request)
-        {
-            if (await _userService.CofirmUser(request.Mail))
-                return Ok();
-            return BadRequest();
+    
 
-        }
+    
+        
+      
+
+       
     }
 }

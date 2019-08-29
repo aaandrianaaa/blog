@@ -27,8 +27,9 @@ namespace Service.Implementations
             token = string.Empty;
 
             var user = _userManagementService.GetUser(request.Email, request.Password);
-            if (user == null) return false;
-            if (!user.Activated) return false;
+            if (user.Blocked == true && user.BlockedUntil < DateTime.Now) user.Blocked = false;
+            if (user == null || user.Deleted_at != null || user.Blocked || !user.Activated) return false;
+          
             var claim = new[]
             {
                 new Claim(ClaimTypes.Email, request.Email),

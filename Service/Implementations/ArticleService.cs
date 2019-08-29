@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Service.Helper;
 using Service.Interfaces;
 using Service.Models;
+using Service.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,196 +14,121 @@ namespace Service.Implementations
 {
     public class ArticleService : IArticleService
     {
-        BlogContext db;
+        readonly IArticleRepository articleRepository;
+        readonly IUserRepository userRepository;
+        readonly ICategoryRepository categoryRepository;
+        readonly ISavedArticlesRepository savedArticlesRepository;
 
-        public ArticleService(BlogContext db)
+        public ArticleService(IArticleRepository articleRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ISavedArticlesRepository savedArticlesRepository)
         {
-            this.db = db;
+            this.articleRepository = articleRepository;
+            this.userRepository = userRepository;
+            this.categoryRepository = categoryRepository;
+            this.savedArticlesRepository = savedArticlesRepository;
         }
 
 
 
         public async Task<Article> GetByIDAsync(int id)
         {
-            if (db.Articles.Where(a => a.Deleted_at == null)
-                .Where(a => a.ID == id)
-                .FirstOrDefault() != null)
-            {
-                IQueryable<Article> IQarticle = db.Articles
-                    .Where(a => a.ID == id)
-                    .Include(a => a.Category)
-                    .Where(a => a.CategoryID == a.Category.ID)
-                    .Include(a => a.Author)
-                    .Where(a => a.Author.ID == a.AuthorID);
-                var article = await IQarticle.FirstOrDefaultAsync<Article>();
-                article.ViewCount++;
-                await db.SaveChangesAsync();
-                return article;
-            }
-            return null;
+            var article = articleRepository.GetIncludingAll(a => a.Deleted_at == null && a.ID == id);
+            if (article == null) return null;
+            article.ViewCount++;
+            await articleRepository.SaveAsync();
+            return article;
         }
 
-        public List<Article> GetList(string orderBy)
+        public async Task<List<Article>> GetList(int limit, int page)
         {
-            var article = db.Articles
-                  .Include(a => a.Category)
-                  .Where(a => a.CategoryID == a.Category.ID)
-                  .Include(a=> a.Author)
-                  .Where(a=> a.Author.ID == a.AuthorID)
-                  .Where(a => a.Deleted_at == null)
-                  .AsQueryable();
-
-
-            switch (orderBy)
-            {
-                case "rating asc":
-                    article = article.OrderBy(x => x.Rating);
-                    break;
-                case "rating desc":
-                    article = article.OrderByDescending(x => x.Rating);
-                    break;
-                case "view asc":
-                    article = article.OrderBy(x => x.ViewCount);
-                    break;
-
-                case "view desc":
-                    article = article.OrderByDescending(x => x.ViewCount);
-                    break;
-
-                case "created at":
-                    article = article.OrderBy(x => x.Created_at);
-                    break;
-            }
-
-            return article.ToList();
+            var article = await articleRepository.GetManyIncludingAllAsync(a => a.Deleted_at == null, limit, page);
+            return article;
 
         }
 
-        public async Task<bool> DeleteByIDAsync(int id)
+        public async Task<bool> DeleteByIDAsync(int id, int user_id)
         {
-
-            var article = await db.Articles.FindAsync(id);
-            if (article != null)
+            var user = await userRepository.GetAsync(x => x.ID == user_id);
+            var article = await articleRepository.GetAsync(x => x.ID == id);
+            if (article != null && (article.AuthorID == user_id || user.RoleID == Roles.User || user.RoleID == 4))
             {
                 article.Deleted_at = DateTime.Now;
-                
-                var category = db.Categories.FirstOrDefault(x => x.ID == article.CategoryID);
-                if (category == null)
-                {
-                    return false;
-
-                }
+                var category = await categoryRepository.GetAsync(x => x.ID == article.CategoryID);
+                if (category == null) return false;
                 category.ArticleCount--;
-                
-                await db.SaveChangesAsync();
+                await articleRepository.SaveAsync();
                 return true;
             }
+
             return false;
         }
 
         public async Task<bool> CreateAsync(Article article, int id)
         {
             article.AuthorID = id;
-           await db.AddAsync(article);
-
-            var category = db.Categories.FirstOrDefault(x => x.ID == article.CategoryID);
-            if (category == null)
-            {
-                return false;
-
-            }
+            await articleRepository.CreateAsync(article);
+            var category = await categoryRepository.GetAsync(x => x.ID == article.CategoryID);
+            if (category == null) return false;
             category.ArticleCount++;
-            await db.SaveChangesAsync();
+            await articleRepository.SaveAsync();
             return true;
         }
 
-        public async Task<bool> PatchAsync(int id, Article Article)
+        public async Task<bool> PatchAsync(int id, Article Article, int user_id)
         {
-            var article = db.Articles
-                .Where(x => x.ID == id)
-                .Where(a => a.Deleted_at == null)
-                .FirstOrDefault();
-
-            if (article != null)
+            var article = await articleRepository.GetAsync(a => a.ID == id && a.Deleted_at == null);
+            var user = await userRepository.GetAsync(x => x.ID == user_id);
+            if (article != null && (article.AuthorID == user_id || user.RoleID == 4))
             {
-                var new_article = db.Articles.Where(x => x.ID == id).First();
+                var new_article = await articleRepository.GetAsync(x => x.ID == id);
                 if (Article.Name != null)
                     new_article.Name = Article.Name;
                 if (Article.Text != null)
                     new_article.Text = Article.Text;
-                db.Articles.Update(new_article);
-                await db.SaveChangesAsync();
+                await articleRepository.Update(new_article, (x => x.ID == id));
+                await articleRepository.SaveAsync();
                 return true;
             }
 
             return false;
         }
 
-        public List<Article> GetByCategoryID(int category_id, string orderBy)
+
+        public async Task<List<Article>> GetByCategoryID(int category_id, int limit, int page)
         {
-
-            var article = db.Articles.Where(x => x.CategoryID == category_id)
-                 .Include(a => a.Category).Where(a => a.CategoryID == a.Category.ID)
-                 .Where(a => a.Deleted_at == null)
-                 .Include(a => a.Author)
-                  .Where(a => a.Author.ID == a.AuthorID)
-                .AsQueryable();
-
-
-            switch (orderBy)
-            {
-                case "rating asc":
-                    article = article.OrderBy(x => x.Rating);
-                    break;
-                case "rating desc":
-                    article = article.OrderByDescending(x => x.Rating);
-                    break;
-
-                case "view asc":
-                    article = article.OrderBy(x => x.ViewCount);
-                    break;
-                case "view desc":
-                    article = article.OrderByDescending(x => x.ViewCount);
-                    break;
-                case "created at":
-                    article = article.OrderBy(x => x.Created_at);
-                    break;
-            }
-
-            return article.ToList();
+            var article = await articleRepository.GetManyIncludingAllAsync((a => a.CategoryID == a.Category.ID && a.Deleted_at == null && a.Author.ID == a.AuthorID), limit, page);
+            return article;
         }
+
 
         public async Task<bool> RatingArticle(int id, int rating)
         {
-            var article = db.Articles.Where(a => a.ID == id).Where(a => a.Deleted_at == null).FirstOrDefault();
-            if (article != null)
-            {
-                if (rating <= 5 && rating > 0)
-                {
-                    if (article.Rating > 0)
-                        article.Rating = (article.Rating + rating) / 2;
-                    if (article.Rating == 0)
-                        article.Rating = article.Rating + rating;
+            var article = await articleRepository.GetAsync(a => a.ID == id && a.Deleted_at == null);
+            if (article == null || rating > 5 && rating < 0) return false;
 
-                    await db.SaveChangesAsync();
-                    return true;
+            if (article.Rating > 0)
+                article.Rating = (article.Rating + rating) / 2;
+            if (article.Rating == 0)
+                article.Rating = article.Rating + rating;
 
-                }
-            }
+            await articleRepository.SaveAsync();
+            return true;
 
-            return false;
 
         }
 
-        public List<SavedArticles> GetSavedArticles(int id)
+        public async Task<List<SavedArticles>> GetSavedArticles(int id, int limit, int page)
         {
-            var articles = db.SavedArticles
-                .Where(a => a.UsreID == id)
-                .Include(a => a.Article)
-                .Where(a => a.ArticleID == a.Article.ID)
-                .Include(a => a.Article.Author);
-                
-            return articles.ToList();
+            var articles = await savedArticlesRepository.GetManyIncludingAllAsync((a => a.UsreID == id && a.User.ID == a.UsreID && a.ArticleID == a.Article.ID && a.Article.AuthorID == a.Article.Author.ID), limit, page);
+
+            //  .Where(a => a.UsreID == id)
+            //.Include(a => a.User)
+            //.Where(u => u.User.ID == u.UsreID)
+            // .Include(a => a.Article)
+            // .Where(a => a.ArticleID == a.Article.ID)
+            // .Include(a => a.Article.Author)
+            // .AsQueryable();
+
+            return articles;
         }
 
         public async Task<bool> SaveArticle(int user_id, int article_id)
@@ -212,12 +139,17 @@ namespace Service.Implementations
                 UsreID = user_id
             };
 
-            await db.AddAsync(save);
-            await db.SaveChangesAsync();
+            await savedArticlesRepository.CreateAsync(save);
+            await savedArticlesRepository.SaveAsync();
 
             return true;
         }
 
+        public async Task<List<Article>> ArticlesByThisAuthor(int id, int limit, int page)
+        {
+            var articles = await articleRepository.GetManyIncludingAllAsync((a => a.AuthorID == id && a.Author.ID == a.AuthorID && a.Category.ID == a.CategoryID), limit, page);
+            return articles;
+        }
     }
 
 

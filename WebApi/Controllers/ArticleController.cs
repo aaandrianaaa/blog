@@ -12,8 +12,8 @@ using Newtonsoft.Json.Linq;
 using Service.Interfaces;
 using Service.Models;
 using WebApi.Requests;
-
-
+using WebApi.ViewModel;
+using Service.Extensions;
 namespace WebApi.Controllers
 {
     [Route("v1/api/articles")]
@@ -35,36 +35,40 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var article = await articleService.GetByIDAsync(id);
-            if (article != null)
-                return Ok(article);
-            return BadRequest();
+            if (article == null) return BadRequest();
+
+            var viewArticle = AutoMapper.Mapper.Map<ArticleView>(article);
+
+            return Ok(viewArticle);
         }
+
         [AllowAnonymous]
         [HttpGet("")]
-        public IActionResult List([FromQuery]Paginating request)
+        public async Task<IActionResult> List([FromQuery]Paginating request)
         {
-            string orderBy = HttpContext.Request.Query["order_by"];
-            var article = articleService.GetList(orderBy);
+            var articles = await articleService.GetList(request.Limit, request.Page);
+            var _mapArticles = AutoMapper.Mapper.Map<List<ArticlesView>>(articles);
 
-            return Ok(article.Skip(request.Limit * request.Page).Take(request.Limit));
+            return Ok(_mapArticles);
         }
 
-        [Authorize(Roles = "Writer, Admin")]
+        [Authorize(Roles = "Writer, Admin, Moderator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var user_id = User.Claims.GetUserId();
+            if (user_id == null) return BadRequest();
+            if (!await articleService.DeleteByIDAsync(id, user_id.Value)) return BadRequest();
 
-            if (!await articleService.DeleteByIDAsync(id))
-                return BadRequest();
             return Ok();
         }
 
-        [Authorize(Roles = "Writer, Admin")]
+        [Authorize(Roles = "Writer, Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateArticleRequestcs request)
         {
             var maparticle = AutoMapper.Mapper.Map<Article>(request);
-            int? user_id = GetUserId();
+            var user_id = User.Claims.GetUserId();
             if (user_id == null) return BadRequest();
 
             if (!await articleService.CreateAsync(maparticle, user_id.Value))
@@ -74,24 +78,26 @@ namespace WebApi.Controllers
 
         }
 
-        [Authorize(Roles = "Writer, Admin")]
+        [Authorize(Roles = "Writer, Admin, Moderator")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> Patch(int id, PatchArticleRequest request)
         {
             var maparticle = AutoMapper.Mapper.Map<Article>(request);
-            if (!await articleService.PatchAsync(id, maparticle))
+            var user_id = User.Claims.GetUserId();
+            if (user_id == null) return BadRequest();
+            if (!await articleService.PatchAsync(id, maparticle, user_id.Value))
                 return BadRequest();
             return Ok();
         }
         [AllowAnonymous]
         [HttpGet("category/{category_id}")]
-        public IActionResult GetByCategory(int category_id, [FromQuery]Paginating request)
+        public async Task<IActionResult> GetByCategory(int category_id, [FromQuery]Paginating request)
         {
 
-            string orderBy = HttpContext.Request.Query["order_by"];
-            var articles = articleService.GetByCategoryID(category_id, orderBy);
+            var articles = await articleService.GetByCategoryID(category_id, request.Limit, request.Page);
+            var _mapArticles = AutoMapper.Mapper.Map<List<ArticlesView>>(articles);
 
-            return Ok(articles.Skip(request.Limit * request.Page).Take(request.Limit));
+            return Ok(_mapArticles);
         }
 
         [HttpPost("rating/{id}")]
@@ -103,22 +109,10 @@ namespace WebApi.Controllers
         }
 
 
-        public int? GetUserId()
-        {
-
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
-            if (userId == null)
-            {
-                return null;
-            }
-
-            return Convert.ToInt32(userId);
-        }
-
         [HttpPost("saving/{id}")]
         public async Task<IActionResult> Saving(int id)
         {
-            int? userId = GetUserId();
+            int? userId = User.Claims.GetUserId();
             if (!userId.HasValue) return BadRequest();
             if (await articleService.SaveArticle(userId.Value, id))
                 return Ok();
@@ -127,14 +121,28 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("saved")]
-        public async Task<IActionResult> Saved()
+        public async Task<IActionResult> Saved([FromQuery]Paginating request)
         {
-            int? userId = GetUserId();
-            if (!userId.HasValue) return BadRequest();
-            var articles = articleService.GetSavedArticles(userId.Value);
-            return Ok(articles);
+
+            var user_id = User.Claims.GetUserId();
+            if (!user_id.HasValue) return BadRequest();
+            var articles = articleService.GetSavedArticles(user_id.Value, request.Limit, request.Page);
+            var _mapArticles = AutoMapper.Mapper.Map<List<SavedArticleView>>(articles);
+
+            return Ok(_mapArticles);
 
         }
+        [AllowAnonymous]
+        [HttpGet("author/{id}")]
+        public async Task<IActionResult> AuthorArticles([FromQuery]Paginating request, int id)
+        {
+            var articles = await articleService.ArticlesByThisAuthor(id, request.Limit, request.Page);
+            var _mapArticle = AutoMapper.Mapper.Map<List<ArticlesView>>(articles);
+            return Ok(_mapArticle);
+
+        }
+
+
 
 
 

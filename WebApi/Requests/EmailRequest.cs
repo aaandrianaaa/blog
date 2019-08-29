@@ -11,7 +11,7 @@ namespace WebApi.Requests
     public class EmailRequest
     {
         [Required]
-        [JsonProperty(PropertyName  = "Email")]
+        [JsonProperty(PropertyName  = "email")]
         [DataType(DataType.EmailAddress, ErrorMessage = "E-mail is not valid")]
         public string Mail { get; set; }
     }

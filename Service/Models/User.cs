@@ -13,6 +13,7 @@ namespace Service.Models
     [Table("users")]
     public class User
     {
+        public static object Claims { get; internal set; }
         [ForeignKey("AuthorID ")]
         [Column(name: "id")]
         public int ID { get; set; }
@@ -30,27 +31,34 @@ namespace Service.Models
         [JsonIgnore]
         public string Password { get; set; }
         [Column(name: "age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
         [Column(name: "birthday_date")]
-        public DateTime BirthdayDate { get; set; }
+        public DateTime? BirthdayDate { get; set; }
         [Column(name: "role_id")]
-        [JsonIgnore]
+       
         public int RoleID { get; set; } = 1;
         [Column(name: "role")]
-        [JsonIgnore]
+       
         public Role Role { get; set; }
-        [JsonIgnore]
+        
         [Column(name: "activated")]
         public bool Activated { get; set; } = false;
-        [JsonIgnore]
+       
         [Column(name: "created_at")]
         public DateTime Created_at { get; set; }
-        [JsonIgnore]
+       
         [Column(name: "deleted_at")]
         public DateTime? Deleted_at { get; set; }
-        [JsonIgnore]
+        
         [Column(name: "updated_at")]
         public DateTime Updated_at { get; set; }
 
+        [Column(name: "blocked")]
+        public bool Blocked { get; set; } = false;
+
+        [Column (name: "blocked_until")]
+
+        public DateTime? BlockedUntil { get; set; }
+       
     }
 }

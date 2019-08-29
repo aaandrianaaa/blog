@@ -13,7 +13,7 @@ namespace Service.Interfaces
         Task<Category> GetByIDAsync(int id);
         Task<bool> CreateAsync(Category category);
         Task<bool> DeleteByIDAsync(int id);
-        List<Category> GetList(string orderBy);
+        Task<List<Category>> GetList(int limit, int page);
 
         Task<bool> PatchAsync(Category category, int id);
 

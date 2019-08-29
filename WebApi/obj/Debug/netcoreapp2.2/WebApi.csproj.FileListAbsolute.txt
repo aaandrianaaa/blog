@@ -15,7 +15,3 @@ C:\Users\Andriana\source\repos\WebApplication18\WebApi\obj\Debug\netcoreapp2.2\W
 C:\Users\Andriana\source\repos\WebApplication18\WebApi\bin\Debug\netcoreapp2.2\Service.dll
 C:\Users\Andriana\source\repos\WebApplication18\WebApi\bin\Debug\netcoreapp2.2\Service.pdb
 C:\Users\Andriana\source\repos\WebApplication18\WebApi\obj\Debug\netcoreapp2.2\WebApi.csproj.CopyComplete
-C:\Users\Andriana\source\repos\WebApplication18\WebApi\bin\Debug\netcoreapp2.2\WebApplication18.Views.dll
-C:\Users\Andriana\source\repos\WebApplication18\WebApi\bin\Debug\netcoreapp2.2\WebApplication18.Views.pdb
-C:\Users\Andriana\source\repos\WebApplication18\WebApi\bin\Debug\netcoreapp2.2\WebApplication18.dll
-C:\Users\Andriana\source\repos\WebApplication18\WebApi\bin\Debug\netcoreapp2.2\WebApplication18.pdb

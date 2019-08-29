@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Service.Models;
 using WebApi.Requests;
+using WebApi.ViewModel;
 
 namespace WebApi.Controllers
 {
@@ -24,17 +25,20 @@ namespace WebApi.Controllers
             
             this.categoryService = categoryService;
         }
+
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task <IActionResult> Get(int id)
         { 
 
           var category = await categoryService.GetByIDAsync(id);
-            if(category!= null)
-            return Ok(category);
-            return BadRequest();
+            if (category == null) return BadRequest();
+
+            var _mapCategory = AutoMapper.Mapper.Map<CategoryView>(category);
+            return Ok(_mapCategory);
+          
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpPost("")]
         public async Task <IActionResult> Create(CreateCategoryRequest request)
         {
@@ -44,7 +48,7 @@ namespace WebApi.Controllers
         
             return Ok();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpDelete("{id}")]
         public async Task <IActionResult> Delete(int id)
         {
@@ -59,14 +63,13 @@ namespace WebApi.Controllers
         }
         [AllowAnonymous]
         [HttpGet("")]
-        public IActionResult List([FromQuery]Paginating request)
+        public async Task <IActionResult> List([FromQuery]Paginating request)
         {
-            string orderBy = HttpContext.Request.Query["order_by"];
-            var categories = categoryService.GetList(orderBy);
-            var categoryLimit = categories.Skip(request.Limit * request.Page ).Take(request.Limit);
-            return Ok(categoryLimit);
+            var categories = await categoryService.GetList( request.Limit, request.Page);
+           var _mapCategory = AutoMapper.Mapper.Map<List<CategoriesView>>(categories);
+            return Ok(_mapCategory);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> Patch(PatchCategoryRequest request, int id)
         {
