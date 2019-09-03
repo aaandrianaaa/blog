@@ -21,8 +21,8 @@ namespace WebApi.Mapper
                 .ForMember(c => c.Description, map => map.MapFrom(m => m.Description))
                 .ForMember(c => c.ArticleCount, map => map.Ignore())
                 .ForMember(c => c.ViewCount, map => map.Ignore())
-            .ForMember(c => c.Created_at, map => map.MapFrom(m => DateTime.Now))
-            .ForMember(c => c.Updated_at, map => map.MapFrom(m => DateTime.Now));
+            .ForMember(c => c.CreatedAt, map => map.MapFrom(m => DateTime.Now))
+            .ForMember(c => c.UpdatedAt, map => map.MapFrom(m => DateTime.Now));
 
             CreateMap<PatchCategoryRequest, Category>()
                 .ForMember(c => c.Name, map => map.MapFrom(m => m.Name))
@@ -30,8 +30,8 @@ namespace WebApi.Mapper
                 .ForMember(c => c.ID, map => map.Ignore())
                  .ForMember(c => c.ArticleCount, map => map.Ignore())
                 .ForMember(c => c.ViewCount, map => map.Ignore())
-                .ForMember(c => c.Created_at, map => map.Ignore())
-                .ForMember(c => c.Updated_at, map => map.MapFrom(m => DateTime.Now));
+                .ForMember(c => c.CreatedAt, map => map.Ignore())
+                .ForMember(c => c.UpdatedAt, map => map.MapFrom(m => DateTime.Now));
 
 
 
@@ -42,9 +42,9 @@ namespace WebApi.Mapper
                 .ForMember(a => a.CategoryID, map => map.MapFrom(m => m.CategoryID))
                 .ForMember(a => a.ID, map => map.Ignore())
                 .ForMember(a => a.ViewCount, map => map.MapFrom(m => 0))
-                .ForMember(a => a.Created_at, map => map.MapFrom(m => DateTime.Now))
-                .ForMember(a => a.Updated_at, map => map.MapFrom(m => DateTime.Now))
-                .ForMember(a => a.Deleted_at, map => map.Ignore())
+                .ForMember(a => a.CreatedAt, map => map.MapFrom(m => DateTime.Now))
+                .ForMember(a => a.UpdatedAt, map => map.MapFrom(m => DateTime.Now))
+                .ForMember(a => a.DeletedAt, map => map.Ignore())
                 .ForMember(a => a.Category, map => map.Ignore())
                 .ForMember(a => a.Rating, map => map.Ignore())
                 .ForMember(a => a.AuthorID, map => map.Ignore())
@@ -57,9 +57,9 @@ namespace WebApi.Mapper
                 .ForMember(a => a.CategoryID, map => map.Ignore())
                 .ForMember(a => a.ID, map => map.Ignore())
                 .ForMember(a => a.ViewCount, map => map.Ignore())
-                .ForMember(a => a.Created_at, map => map.Ignore())
-                .ForMember(a => a.Updated_at, map => map.MapFrom(m => DateTime.Now))
-                .ForMember(a => a.Deleted_at, map => map.Ignore())
+                .ForMember(a => a.CreatedAt, map => map.Ignore())
+                .ForMember(a => a.UpdatedAt, map => map.MapFrom(m => DateTime.Now))
+                .ForMember(a => a.DeletedAt, map => map.Ignore())
                  .ForMember(a => a.Category, map => map.Ignore())
                   .ForMember(a => a.AuthorID, map => map.Ignore())
                 .ForMember(a => a.Author, map => map.Ignore());
@@ -75,11 +75,11 @@ namespace WebApi.Mapper
                 .ForMember(u => u.Age, map => map.MapFrom(m => m.Age))
                 .ForMember(u => u.BirthdayDate, map => map.MapFrom(m => m.BirthdayDate))
                 .ForMember(u => u.Role, map => map.Ignore())
-                .ForMember(u => u.Created_at, map => map.MapFrom(u => DateTime.Now))
+                .ForMember(u => u.CreatedAt, map => map.MapFrom(u => DateTime.Now))
                 .ForMember(u => u.RoleID, map => map.Ignore())
                 .ForMember(u => u.Activated, map => map.Ignore())
-                .ForMember(u => u.Updated_at, map => map.MapFrom(u => DateTime.Now))
-                .ForMember(u => u.Deleted_at, map => map.Ignore())
+                .ForMember(u => u.UpdatedAt, map => map.MapFrom(u => DateTime.Now))
+                .ForMember(u => u.DeletedAt, map => map.Ignore())
                 .ForMember(u => u.Blocked, map => map.Ignore())
                 .ForMember(u => u.BlockedUntil, map => map.Ignore());
 
@@ -88,7 +88,7 @@ namespace WebApi.Mapper
                 .ForMember(a => a.ID, map => map.Ignore())
                 .ForMember(a => a.Rand, map => map.MapFrom(a => a.Number))
                 .ForMember(a => a.Email, map => map.MapFrom(a => a.Mail))
-                .ForMember(a => a.Created_at, map => map.MapFrom(a => DateTime.Now));
+                .ForMember(a => a.CreatedAt, map => map.MapFrom(a => DateTime.Now));
 
             CreateMap<User, UsersView>()
 
@@ -104,8 +104,8 @@ namespace WebApi.Mapper
                 .ForMember(a => a.CategoryID, map => map.MapFrom(m => m.CategoryID))
                 .ForMember(a => a.CategoryName, map => map.MapFrom(m => m.Category.Name))
                 .ForMember(a => a.ViewCount, map => map.MapFrom(m => m.ViewCount))
-                .ForMember(a => a.UpdatedAt, map => map.MapFrom(m => m.Updated_at))
-                .ForMember(a => a.CreatedAt, map => map.MapFrom(m => m.Created_at))
+                .ForMember(a => a.UpdatedAt, map => map.MapFrom(m => m.UpdatedAt))
+                .ForMember(a => a.CreatedAt, map => map.MapFrom(m => m.CreatedAt))
                 .ForMember(a => a.AuthorID, map => map.MapFrom(m => m.AuthorID))
                 .ForMember(a => a.AuthorNickname, map => map.MapFrom(m => m.Author.Nickname));
 
@@ -128,11 +128,11 @@ namespace WebApi.Mapper
                 .ForMember(u => u.Age, map => map.MapFrom(m => m.Age))
                 .ForMember(u => u.BirthdayDate, map => map.MapFrom(m => m.BirthdayDate))
                 .ForMember(u => u.Role, map => map.Ignore())
-                .ForMember(u => u.Created_at, map => map.Ignore())
+                .ForMember(u => u.CreatedAt, map => map.Ignore())
                 .ForMember(u => u.RoleID, map => map.Ignore())
                 .ForMember(u => u.Activated, map => map.Ignore())
-                .ForMember(u => u.Updated_at, map => map.MapFrom(u => DateTime.Now))
-                .ForMember(u => u.Deleted_at, map => map.Ignore())
+                .ForMember(u => u.UpdatedAt, map => map.MapFrom(u => DateTime.Now))
+                .ForMember(u => u.DeletedAt, map => map.Ignore())
                 .ForMember(u => u.Blocked, map => map.Ignore())
                 .ForMember(u => u.BlockedUntil, map => map.Ignore());
 
@@ -143,11 +143,13 @@ namespace WebApi.Mapper
                 .ForMember(a => a.Rating, map => map.MapFrom(a => a.Rating))
                 .ForMember(a => a.CategoryID, map => map.MapFrom(a => a.CategoryID))
                 .ForMember(a => a.AuthorID, map => map.MapFrom(a => a.AuthorID))
-                .ForMember(a => a.UpdatedAt, map => map.MapFrom(a => a.Updated_at))
-                .ForMember(a => a.CreatedAt, map => map.MapFrom(a => a.Created_at))
+                .ForMember(a => a.UpdatedAt, map => map.MapFrom(a => a.UpdatedAt))
+                .ForMember(a => a.CreatedAt, map => map.MapFrom(a => a.CreatedAt))
                 .ForMember(a => a.ViewCount, map => map.MapFrom(a => a.ViewCount))
                 .ForMember(a => a.Category, map => map.MapFrom(a => a.Category))
                 .ForMember(a => a.Author, map => map.MapFrom(a => a.Author));
+               
+                
 
             CreateMap<User, UserView>()
                  .ForMember(u => u.ID, map => map.MapFrom(u => u.ID))
@@ -157,7 +159,7 @@ namespace WebApi.Mapper
                 .ForMember(u => u.AboutUser, map => map.MapFrom(m => m.AboutUser))
                 .ForMember(u => u.Age, map => map.MapFrom(m => m.Age))
                 .ForMember(u => u.BirthdayDate, map => map.MapFrom(m => m.BirthdayDate))
-                .ForMember(u => u.Created_at, map => map.MapFrom(u => u.Created_at));
+                .ForMember(u => u.CreatedAt, map => map.MapFrom(u => u.CreatedAt));
 
             CreateMap<Category, CategoryView>()
                  .ForMember(c => c.Name, map => map.MapFrom(m => m.Name))
@@ -165,7 +167,7 @@ namespace WebApi.Mapper
                 .ForMember(c => c.ID, map => map.MapFrom(m => m.ID))
                  .ForMember(c => c.ArticleCount, map => map.MapFrom(m => m.ArticleCount))
                 .ForMember(c => c.ViewCount, map => map.MapFrom(m => m.ViewCount))
-                .ForMember(c => c.Created_at, map => map.MapFrom(m => m.Created_at));
+                .ForMember(c => c.CreatedAt, map => map.MapFrom(m => m.CreatedAt));
 
             CreateMap<SavedArticles, SavedArticleView>()
 
@@ -174,8 +176,19 @@ namespace WebApi.Mapper
                 .ForMember(c => c.Author, map => map.MapFrom(c => c.Article.Author))
                 .ForMember(c => c.AuthorID, map => map.MapFrom(c => c.Article.Author.ID));
 
+            CreateMap<Comment, CommentsView>()
+                .ForMember(c => c.CreatedAt, map => map.MapFrom(m => m.CreatedAt))
+            .ForMember(c => c.Likes, map => map.MapFrom(m => m.Likes))
+            .ForMember(c => c.Text, map => map.MapFrom(m => m.Text))
+            .ForMember(c => c.User, map => map.MapFrom(m => m.User.Nickname))
+            .ForMember(c => c.UpdatedAt, map => map.MapFrom(m => m.UpdatedAt))
+            .ForMember(c => c.userId, map => map.MapFrom(m => m.User.ID))
+            .ForMember(c => c.Id, map => map.MapFrom(m => m.ID));
 
-                
+
+
+
+
 
 
         }

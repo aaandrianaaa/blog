@@ -17,13 +17,12 @@ namespace WebApi.Controllers
     [Authorize]
     public class CategoryController : ControllerBase
     {
-        
-        ICategoryService categoryService;
+       private readonly ICategoryService _categoryService;
 
         public CategoryController(ICategoryService categoryService)
         {
             
-            this.categoryService = categoryService;
+            this._categoryService = categoryService;
         }
 
         [AllowAnonymous]
@@ -31,19 +30,19 @@ namespace WebApi.Controllers
         public async Task <IActionResult> Get(int id)
         { 
 
-          var category = await categoryService.GetByIDAsync(id);
+          var category = await _categoryService.GetByIDAsync(id);
             if (category == null) return BadRequest();
 
-            var _mapCategory = AutoMapper.Mapper.Map<CategoryView>(category);
-            return Ok(_mapCategory);
+            var mapCategory = AutoMapper.Mapper.Map<CategoryView>(category);
+            return Ok(mapCategory);
           
         }
         [Authorize(Roles = "Admin, Moderator")]
         [HttpPost("")]
         public async Task <IActionResult> Create(CreateCategoryRequest request)
         {
-            var mapcategory = AutoMapper.Mapper.Map<Category>(request);
-            if (!await categoryService.CreateAsync(mapcategory))
+            var mapCategory = AutoMapper.Mapper.Map<Category>(request);
+            if (!await _categoryService.CreateAsync(mapCategory))
                 return BadRequest();
         
             return Ok();
@@ -52,29 +51,25 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task <IActionResult> Delete(int id)
         {
-        
 
-          if(!await categoryService.DeleteByIDAsync(id))
-            {
-                return BadRequest();
-            }
-
+            if (!await _categoryService.DeleteByIDAsync(id)) return BadRequest();
+         
             return Ok();
         }
         [AllowAnonymous]
         [HttpGet("")]
         public async Task <IActionResult> List([FromQuery]Paginating request)
         {
-            var categories = await categoryService.GetList( request.Limit, request.Page);
-           var _mapCategory = AutoMapper.Mapper.Map<List<CategoriesView>>(categories);
-            return Ok(_mapCategory);
+            var categories = await _categoryService.GetList( request.Limit, request.Page);
+           var mapCategory = AutoMapper.Mapper.Map<List<CategoriesView>>(categories);
+            return Ok(mapCategory);
         }
         [Authorize(Roles = "Admin, Moderator")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> Patch(PatchCategoryRequest request, int id)
         {
             var category = AutoMapper.Mapper.Map<Category>(request);
-            if (await categoryService.PatchAsync(category, id))
+            if (await _categoryService.PatchAsync(category, id))
                 return Ok();
             return BadRequest();
         }

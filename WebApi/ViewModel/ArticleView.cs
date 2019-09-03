@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Service.Models;
 
 namespace WebApi.ViewModel
 {
     public class ArticleView
     {
+     
+
         public int ID { get; set; }
 
         public string Text { get; set; }
@@ -27,5 +30,6 @@ namespace WebApi.ViewModel
 
         public DateTime UpdatedAt { get; set; }
         public DateTime CreatedAt { get; set; }
+        
     }
 }

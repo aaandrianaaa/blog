@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Andriana\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Andriana\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_WebApplication18.564464535.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Andriana\source\repos\WebApplication18" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Service" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Extensions" t="Include">
+          <e p="AuthExtension.cs" t="Include" />
+        </e>
+        <e p="Helper" t="Include">
+          <e p="Mail.cs" t="Include" />
+          <e p="RandomPassword.cs" t="Include" />
+          <e p="Roles.cs" t="Include" />
+          <e p="Secure.cs" t="Include" />
+        </e>
+        <e p="Implementations" t="Include">
+          <e p="ArticleService.cs" t="Include" />
+          <e p="CategoryService.cs" t="Include" />
+          <e p="CommentService.cs" t="Include" />
+          <e p="TokenAuthenticationService.cs" t="Include" />
+          <e p="UserManagementService.cs" t="Include" />
+        </e>
+        <e p="Interfaces" t="Include">
+          <e p="IArticleService.cs" t="Include" />
+          <e p="IAuthenticateService.cs" t="Include" />
+          <e p="ICategoryService.cs" t="Include" />
+          <e p="ICommentService.cs" t="Include" />
+          <e p="IUserManagementService.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="Article.cs" t="Include" />
+          <e p="Base.cs" t="Include" />
+          <e p="BlogContext.cs" t="Include" />
+          <e p="Category.cs" t="Include" />
+          <e p="Comment.cs" t="Include" />
+          <e p="Like.cs" t="Include" />
+          <e p="Role.cs" t="Include" />
+          <e p="SavedArticles.cs" t="Include" />
+          <e p="TokenManagement.cs" t="Include" />
+          <e p="TokenRequest.cs" t="Include" />
+          <e p="User.cs" t="Include" />
+          <e p="Сonfirmation.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Service.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Repositories" t="Include">
+          <e p="ArticleRepository.cs" t="Include" />
+          <e p="CategoryRepository.cs" t="Include" />
+          <e p="CommentsRepository.cs" t="Include" />
+          <e p="ConfirmationRepository.cs" t="Include" />
+          <e p="IRepository.cs" t="Include" />
+          <e p="LikeRepository.cs" t="Include" />
+          <e p="Repository.cs" t="Include" />
+          <e p="SavedArticleRepository.cs" t="Include" />
+          <e p="UserRepository.cs" t="Include" />
+        </e>
+        <e p="Service.csproj" t="IncludeRecursive" />
+        <e p="ServiceCollections" t="Include">
+          <e p="EntityDependencies.cs" t="Include" />
+        </e>
+      </e>
+      <e p="WebApi" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="ArticleController.cs" t="Include" />
+          <e p="AuthController.cs" t="Include" />
+          <e p="CategoryController.cs" t="Include" />
+          <e p="CommentsController.cs" t="Include" />
+          <e p="PasswordController.cs" t="Include" />
+          <e p="UserController.cs" t="Include" />
+        </e>
+        <e p="Mapper" t="Include">
+          <e p="MappingProfile.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="WebApi.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Requests" t="Include">
+          <e p="ArticleReitingRequest.cs" t="Include" />
+          <e p="CreateArticleRequestcs.cs" t="Include" />
+          <e p="CreateCategoryRequest.cs" t="Include" />
+          <e p="CreateCommentRequest.cs" t="Include" />
+          <e p="CreateConfirmRequest.cs" t="Include" />
+          <e p="CreateUserRequest.cs" t="Include" />
+          <e p="EmailRequest.cs" t="Include" />
+          <e p="NewPasswordRequest.cs" t="Include" />
+          <e p="NewRoleRequest.cs" t="Include" />
+          <e p="Paginating.cs" t="Include" />
+          <e p="PatchArticleRequest.cs" t="Include" />
+          <e p="PatchCategoryRequest.cs" t="Include" />
+          <e p="PatchCommentRequest.cs" t="Include" />
+          <e p="PatchUserRequest.cs" t="Include" />
+          <e p="RequiredAttribute.cs" t="Include" />
+          <e p="TokenRequest.cs" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="ViewModel" t="Include">
+          <e p="ArticlesView.cs" t="Include" />
+          <e p="ArticleView.cs" t="Include" />
+          <e p="CategoriesView.cs" t="Include" />
+          <e p="CategoryView.cs" t="Include" />
+          <e p="CommentsView.cs" t="Include" />
+          <e p="LoginView.cs" t="Include" />
+          <e p="SavedArticleView.cs" t="Include" />
+          <e p="UsersView.cs" t="Include" />
+          <e p="UserView.cs" t="Include" />
+        </e>
+        <e p="WebApi.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="WebApplication18.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>

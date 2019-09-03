@@ -14,142 +14,154 @@ namespace Service.Implementations
 {
     public class ArticleService : IArticleService
     {
-        readonly IArticleRepository articleRepository;
-        readonly IUserRepository userRepository;
-        readonly ICategoryRepository categoryRepository;
-        readonly ISavedArticlesRepository savedArticlesRepository;
+       private readonly IArticleRepository _articleRepository;
+       private readonly IUserRepository _userRepository;
+       private readonly ICategoryRepository _categoryRepository;
+       private readonly ISavedArticlesRepository _savedArticlesRepository;
+       private readonly ICommentRepository _commentRepository;
+       
 
-        public ArticleService(IArticleRepository articleRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ISavedArticlesRepository savedArticlesRepository)
+        public ArticleService(IArticleRepository articleRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ISavedArticlesRepository savedArticlesRepository, ICommentRepository commentRepository)
         {
-            this.articleRepository = articleRepository;
-            this.userRepository = userRepository;
-            this.categoryRepository = categoryRepository;
-            this.savedArticlesRepository = savedArticlesRepository;
+            _articleRepository = articleRepository;
+            _userRepository = userRepository;
+            _categoryRepository = categoryRepository;
+            _savedArticlesRepository = savedArticlesRepository;
+            _commentRepository = commentRepository;
+          
         }
 
 
 
-        public async Task<Article> GetByIDAsync(int id)
+        public async Task<Article> GetByIdAsync(int id)
         {
-            var article = articleRepository.GetIncludingAll(a => a.Deleted_at == null && a.ID == id);
+            var article =  _articleRepository.GetIncludingAll(a => a.DeletedAt == null && a.ID == id);
             if (article == null) return null;
             article.ViewCount++;
-            await articleRepository.SaveAsync();
+            await _articleRepository.SaveAsync();
             return article;
         }
 
         public async Task<List<Article>> GetList(int limit, int page)
         {
-            var article = await articleRepository.GetManyIncludingAllAsync(a => a.Deleted_at == null, limit, page);
+            var article = await _articleRepository.GetManyIncludingAllAsync(a => a.DeletedAt == null, limit, page);
             return article;
 
         }
 
-        public async Task<bool> DeleteByIDAsync(int id, int user_id)
+        public async Task<bool> DeleteByIdAsync(int id, int userId)
         {
-            var user = await userRepository.GetAsync(x => x.ID == user_id);
-            var article = await articleRepository.GetAsync(x => x.ID == id);
-            if (article != null && (article.AuthorID == user_id || user.RoleID == Roles.User || user.RoleID == 4))
+            var user = await _userRepository.GetAsync(x => x.ID == userId);
+            var article = await _articleRepository.GetAsync(x => x.ID == id);
+            if (article == null || (article.AuthorID != userId && user.RoleID != Roles.User && user.RoleID != 4))
+                return false;
             {
-                article.Deleted_at = DateTime.Now;
-                var category = await categoryRepository.GetAsync(x => x.ID == article.CategoryID);
+                article.DeletedAt = DateTime.Now;
+                var category = await _categoryRepository.GetAsync(x => x.ID == article.CategoryID);
                 if (category == null) return false;
                 category.ArticleCount--;
-                await articleRepository.SaveAsync();
+                await _articleRepository.SaveAsync();
                 return true;
             }
 
-            return false;
         }
 
         public async Task<bool> CreateAsync(Article article, int id)
         {
             article.AuthorID = id;
-            await articleRepository.CreateAsync(article);
-            var category = await categoryRepository.GetAsync(x => x.ID == article.CategoryID);
+            await _articleRepository.CreateAsync(article);
+            var category = await _categoryRepository.GetAsync(x => x.ID == article.CategoryID);
             if (category == null) return false;
             category.ArticleCount++;
-            await articleRepository.SaveAsync();
+            await _articleRepository.SaveAsync();
             return true;
         }
 
-        public async Task<bool> PatchAsync(int id, Article Article, int user_id)
+        public async Task<bool> PatchAsync(int id, Article Article, int userId)
         {
-            var article = await articleRepository.GetAsync(a => a.ID == id && a.Deleted_at == null);
-            var user = await userRepository.GetAsync(x => x.ID == user_id);
-            if (article != null && (article.AuthorID == user_id || user.RoleID == 4))
+            var article = await _articleRepository.GetAsync(a => a.ID == id && a.DeletedAt == null);
+            var user = await _userRepository.GetAsync(x => x.ID == userId);
+            if (article == null || (article.AuthorID != userId && user.RoleID != 4)) return false;
             {
-                var new_article = await articleRepository.GetAsync(x => x.ID == id);
+                var newArticle = await _articleRepository.GetAsync(x => x.ID == id);
                 if (Article.Name != null)
-                    new_article.Name = Article.Name;
+                    newArticle.Name = Article.Name;
                 if (Article.Text != null)
-                    new_article.Text = Article.Text;
-                await articleRepository.Update(new_article, (x => x.ID == id));
-                await articleRepository.SaveAsync();
+                    newArticle.Text = Article.Text;
+                await _articleRepository.Update(newArticle, (x => x.ID == id));
+                await _articleRepository.SaveAsync();
                 return true;
             }
 
-            return false;
+        }
+
+        public Task<List<Article>> GetByCategoryId(int categoryId, int limit, int page)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RatingArticle(int id, int rating)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<SavedArticles>> GetSavedArticles(int id, int limit, int page)
+        {
+            throw new NotImplementedException();
         }
 
 
-        public async Task<List<Article>> GetByCategoryID(int category_id, int limit, int page)
+        public async Task<List<Article>> GetByCategoryIdAsync(int categoryId, int limit, int page)
         {
-            var article = await articleRepository.GetManyIncludingAllAsync((a => a.CategoryID == a.Category.ID && a.Deleted_at == null && a.Author.ID == a.AuthorID), limit, page);
+            var article = await _articleRepository.GetManyIncludingAllAsync((a => a.CategoryID == a.Category.ID && a.DeletedAt == null && a.Author.ID == a.AuthorID), limit, page);
             return article;
         }
 
 
-        public async Task<bool> RatingArticle(int id, int rating)
+        public async Task<bool> RatingArticleAsync(int id, int rating)
         {
-            var article = await articleRepository.GetAsync(a => a.ID == id && a.Deleted_at == null);
+            var article = await _articleRepository.GetAsync(a => a.ID == id && a.DeletedAt == null);
             if (article == null || rating > 5 && rating < 0) return false;
 
             if (article.Rating > 0)
                 article.Rating = (article.Rating + rating) / 2;
-            if (article.Rating == 0)
-                article.Rating = article.Rating + rating;
+            if (article.Rating < 0)
+                article.Rating += rating;
 
-            await articleRepository.SaveAsync();
+            await _articleRepository.SaveAsync();
             return true;
 
 
         }
 
-        public async Task<List<SavedArticles>> GetSavedArticles(int id, int limit, int page)
+        public async Task<List<SavedArticles>> GetSavedArticlesAsync(int id, int limit, int page)
         {
-            var articles = await savedArticlesRepository.GetManyIncludingAllAsync((a => a.UsreID == id && a.User.ID == a.UsreID && a.ArticleID == a.Article.ID && a.Article.AuthorID == a.Article.Author.ID), limit, page);
-
-            //  .Where(a => a.UsreID == id)
-            //.Include(a => a.User)
-            //.Where(u => u.User.ID == u.UsreID)
-            // .Include(a => a.Article)
-            // .Where(a => a.ArticleID == a.Article.ID)
-            // .Include(a => a.Article.Author)
-            // .AsQueryable();
+            var articles = await _savedArticlesRepository.GetManyIncludingAllAsync((a => a.UsreID == id && a.User.ID == a.UsreID && a.ArticleID == a.Article.ID && a.Article.AuthorID == a.Article.Author.ID), limit, page);
 
             return articles;
         }
 
-        public async Task<bool> SaveArticle(int user_id, int article_id)
+        public async Task<bool> SaveArticle(int userId, int articleId)
         {
             var save = new SavedArticles()
             {
-                ArticleID = article_id,
-                UsreID = user_id
+                ArticleID = articleId,
+                UsreID = userId
             };
 
-            await savedArticlesRepository.CreateAsync(save);
-            await savedArticlesRepository.SaveAsync();
+            await _savedArticlesRepository.CreateAsync(save);
+            await _savedArticlesRepository.SaveAsync();
 
             return true;
         }
 
         public async Task<List<Article>> ArticlesByThisAuthor(int id, int limit, int page)
         {
-            var articles = await articleRepository.GetManyIncludingAllAsync((a => a.AuthorID == id && a.Author.ID == a.AuthorID && a.Category.ID == a.CategoryID), limit, page);
+            var articles = await _articleRepository.GetManyIncludingAllAsync((a => a.AuthorID == id && a.Author.ID == a.AuthorID && a.Category.ID == a.CategoryID), limit, page);
             return articles;
         }
+
+        
     }
 
 

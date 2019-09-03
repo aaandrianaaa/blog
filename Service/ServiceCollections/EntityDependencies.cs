@@ -23,7 +23,9 @@ namespace Service.ServiceCollections
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<ISavedArticlesRepository, SavedArticlesRepository>();
-            services.AddTransient<IConfirmRepository, ConfirmRepository> ();
+            services.AddTransient<IConfirmRepository, ConfirmRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<ILikeRepository, LikeRepository>();
 
             return services;
         }

@@ -13,62 +13,62 @@ namespace Service.Repositories
 {
     public class Repository<T> where T : class
     {
-        protected readonly DbSet<T> dbSet;
-        protected readonly BlogContext dbContext;
+        protected readonly DbSet<T> _dbSet;
+        private readonly BlogContext DbContext;
 
-        public Repository(BlogContext dbContext)
+        protected Repository(BlogContext dbContext)
         {
-            this.dbContext = dbContext;
-            this.dbSet = this.dbContext.Set<T>();
+            this.DbContext = dbContext;
+            this._dbSet = this.DbContext.Set<T>();
         }
 
         public async Task CreateAsync(T entity)
         {
-            await dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
         }
 
         public void Delete(T entity)
         {
-            dbSet.Remove(entity);
+            _dbSet.Remove(entity);
         }
 
         public async Task<T> GetAsync(Expression<Func<T, bool>> where)
         {
-            var entity = await dbSet.FirstOrDefaultAsync(where);
+            var entity = await _dbSet.FirstOrDefaultAsync(where);
             return entity;
         }
 
         public async  Task< List<T>> GetList(Expression<Func<T, bool>> where, int limit, int page )
         {
-            return await dbSet.Where(where).Skip(limit * page).Take(limit).ToListAsync();
+            return await _dbSet.Where(where).Skip(limit * page).Take(limit).ToListAsync();
 
         }
 
         public async Task<List<T>> GetListOfAll(int limit, int page)
         {
-            return await dbSet.Skip(limit * page).Take(limit).ToListAsync();
+            return await _dbSet.Skip(limit * page).Take(limit).ToListAsync();
 
         }
 
         public async Task Update(T entity, Expression<Func<T, bool>> where)
         {
-           var find = await dbSet.FirstOrDefaultAsync(where);
-            find = entity;
+            await _dbSet.FirstOrDefaultAsync(@where);
+
+            await DbContext.SaveChangesAsync();
         }
 
         public async Task SaveAsync()
         {
-            await dbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync();
         }
 
     
 
         public async Task<List<T>> GetManyIncludingAllAsync(Expression<Func<T, bool>> where, int limit, int page)
         {
-            var query = dbSet.AsQueryable();
+            var query = _dbSet.AsQueryable();
 
-            foreach (var property in dbContext.Model.FindEntityType(typeof(T)).GetNavigations())
-                query = query.Include(property.Name);
+            query = DbContext.Model.FindEntityType(typeof(T)).GetNavigations().Aggregate(query, (current, property) => current.Include(property.Name));
 
             return await query.Where(where).Skip(limit * page).Take(limit).ToListAsync();
         }
@@ -76,23 +76,29 @@ namespace Service.Repositories
 
         public T GetWithInclude(Expression<Func<T, bool>> where, params string[] include)
         {
-            var query = dbSet.AsQueryable();
+            var query = _dbSet.AsQueryable();
 
-            foreach (var property in include)
-                query = query.Include(property);
+            query = include.Aggregate(query, (current, property) => current.Include(property));
 
             return query.FirstOrDefault(where);
         }
 
         public  T GetIncludingAll(Expression<Func<T, bool>> where)
         {
-            var query = dbSet.AsQueryable();
+            var query = _dbSet.AsQueryable();
 
-            foreach (var property in dbContext.Model.FindEntityType(typeof(T)).GetNavigations())
-                query = query.Include(property.Name);
+            query = DbContext.Model.FindEntityType(typeof(T)).GetNavigations().Aggregate(query, (current, property) => current.Include(property.Name));
 
             return query.FirstOrDefault(where);
         }
 
+        public List<T> GetManyIncludingAll(Expression<Func<T, bool>> where)
+        {
+            var query = _dbSet.AsQueryable();
+
+            query = DbContext.Model.FindEntityType(typeof(T)).GetNavigations().Aggregate(query, (current, property) => current.Include(property.Name));
+
+            return  query.Where(where).ToList();
+        }
     }
 }

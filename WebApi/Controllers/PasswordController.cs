@@ -46,9 +46,9 @@ namespace WebApi.Controllers
         [HttpPost("change")]
         public async Task<IActionResult> ChangePassword(NewPasswordRequest request)
         {
-            var user_id = User.Claims.GetUserId();
-            if (!user_id.HasValue) return BadRequest();
-            if (await _userService.ChangePassword(user_id.Value, request.OldPassword, request.NewPassword))
+            var userId = User.Claims.GetUserId();
+            if (!userId.HasValue) return BadRequest();
+            if (await _userService.ChangePassword(userId.Value, request.OldPassword, request.NewPassword))
                 return Ok();
             return BadRequest();
         }

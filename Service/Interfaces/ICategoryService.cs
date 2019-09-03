@@ -14,8 +14,7 @@ namespace Service.Interfaces
         Task<bool> CreateAsync(Category category);
         Task<bool> DeleteByIDAsync(int id);
         Task<List<Category>> GetList(int limit, int page);
-
-        Task<bool> PatchAsync(Category category, int id);
+       Task<bool> PatchAsync(Category category, int id);
 
     }
 }

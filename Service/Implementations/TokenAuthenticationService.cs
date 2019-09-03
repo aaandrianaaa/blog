@@ -28,7 +28,7 @@ namespace Service.Implementations
 
             var user = _userManagementService.GetUser(request.Email, request.Password);
             if (user.Blocked == true && user.BlockedUntil < DateTime.Now) user.Blocked = false;
-            if (user == null || user.Deleted_at != null || user.Blocked || !user.Activated) return false;
+            if (user == null || user.DeletedAt != null || user.Blocked || !user.Activated) return false;
           
             var claim = new[]
             {

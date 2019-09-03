@@ -18,6 +18,8 @@ namespace Service.Repositories
         Task<List<T>> GetManyIncludingAllAsync(Expression<Func<T, bool>> where, int limit, int page);
         T GetWithInclude(Expression<Func<T, bool>> where, params string[] include);
         T GetIncludingAll(Expression<Func<T, bool>> where);
-     
+       List<T> GetManyIncludingAll(Expression<Func<T, bool>> where);
+
+
     }
 }

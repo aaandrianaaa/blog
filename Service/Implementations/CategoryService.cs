@@ -20,7 +20,7 @@ namespace Service.Implementations
 
         public async Task<Category> GetByIDAsync(int id)
         {
-            var category = await categoryRepository.GetAsync(c => c.Deleted_at == null && c.ID == id);
+            var category = await categoryRepository.GetAsync(c => c.DeletedAt == null && c.ID == id);
             if (category == null) return null;
             category.ViewCount++;
             await categoryRepository.SaveAsync();
@@ -41,20 +41,20 @@ namespace Service.Implementations
             var category = await categoryRepository.GetAsync(c => c.ID == id);
 
             if (category == null || category.ArticleCount != 0) return false;
-            category.Deleted_at = DateTime.Now;
+            category.DeletedAt = DateTime.Now;
             await categoryRepository.SaveAsync();
             return true;
         }
 
         public async Task<List<Category>> GetList(int limit, int page)
         {
-            var categories = await categoryRepository.GetList((c => c.Deleted_at == null), limit, page);
+            var categories = await categoryRepository.GetList((c => c.DeletedAt == null), limit, page);
             return categories;
         }
 
         public async Task<bool> PatchAsync(Category new_category, int id)
         {
-            var category = await categoryRepository.GetAsync(c => c.ID == id && c.Deleted_at == null);
+            var category = await categoryRepository.GetAsync(c => c.ID == id && c.DeletedAt == null);
             if (category == null) return false;
 
             if (new_category.Name != null)

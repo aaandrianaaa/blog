@@ -16,7 +16,7 @@ namespace WebApi.ViewModel
         public string Description { get; set; }
         public int ViewCount { get; set; }
        
-        public DateTime Created_at { get; set; }
+        public DateTime CreatedAt { get; set; }
        
     
     }

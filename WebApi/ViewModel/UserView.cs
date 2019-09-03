@@ -21,7 +21,7 @@ namespace WebApi.ViewModel
         public int? Age { get; set; }
    
         public DateTime BirthdayDate { get; set; }
-        public DateTime Created_at { get; set; }
+        public DateTime CreatedAt { get; set; }
        
     }
 }

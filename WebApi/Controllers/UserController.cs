@@ -31,8 +31,6 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-
-
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserRequest request)
@@ -42,8 +40,8 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
 
-            var mapuser = AutoMapper.Mapper.Map<User>(request);
-            if (await _userService.CreateAsync(mapuser))
+            var mapUser = AutoMapper.Mapper.Map<User>(request);
+            if (await _userService.CreateAsync(mapUser))
             {
                 return Ok();
             }
@@ -64,8 +62,8 @@ namespace WebApi.Controllers
         [HttpPost("confirm")]
         public async Task<IActionResult> ConfirmMail(CreateConfirmRequest request)
         {
-            var mapconfirm = AutoMapper.Mapper.Map<Confirmation>(request);
-            var result = await _userService.CofirmMail(mapconfirm);
+            var mapConfirm = AutoMapper.Mapper.Map<Confirmation>(request);
+            var result = await _userService.CofirmMail(mapConfirm);
             if (!result)
             {
                 return BadRequest();
@@ -78,10 +76,10 @@ namespace WebApi.Controllers
         [HttpPost("change/role/{id}")]
         public async Task<IActionResult> ChangeRole(int id, NewRoleRequest request)
         {
-            var user_id = User.Claims.GetUserId();
-            if (user_id == null) return BadRequest();
+            var userId = User.Claims.GetUserId();
+            if (userId == null) return BadRequest();
 
-            if (await _userService.ChangeRole(id, request.Role, user_id.Value))
+            if (await _userService.ChangeRole(id, request.Role, userId.Value))
                 return Ok();
             return BadRequest();
         }
@@ -90,10 +88,10 @@ namespace WebApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser()
         {
-            var user_id = User.Claims.GetUserId();
+            var userId = User.Claims.GetUserId();
 
-            if (user_id == null) return BadRequest();
-            if (await _userService.DeleteUser(user_id.Value)) return Ok();
+            if (userId == null) return BadRequest();
+            if (await _userService.DeleteUser(userId.Value)) return Ok();
 
             return BadRequest();
         }
@@ -103,13 +101,13 @@ namespace WebApi.Controllers
         [HttpPost("pathc")]
         public async Task<IActionResult> PatchUser(PatchUserRequest request)
         {
-            var user_id = User.Claims.GetUserId();
+            var userId = User.Claims.GetUserId();
 
-            if (user_id == null) return BadRequest();
+            if (userId == null) return BadRequest();
 
-            var _mapUser = AutoMapper.Mapper.Map<User>(request);
+            var mapUser = AutoMapper.Mapper.Map<User>(request);
 
-            if (await _userService.PatchUser(user_id.Value, _mapUser)) return Ok();
+            if (await _userService.PatchUser(userId.Value, mapUser)) return Ok();
 
             return BadRequest();
         }
@@ -120,8 +118,8 @@ namespace WebApi.Controllers
         {
             var user = await _userService.GetUserByIDAsync(id);
             if (user == null) return BadRequest();
-            var _mapUser = AutoMapper.Mapper.Map<ViewModel.UserView>(user);
-            return Ok(_mapUser);
+            var mapUser = AutoMapper.Mapper.Map<ViewModel.UserView>(user);
+            return Ok(mapUser);
         }
 
         [Authorize(Roles ="Moderator, Admin")]
@@ -148,8 +146,8 @@ namespace WebApi.Controllers
         {
             
             var users = await _userService.UsersList(request.Limit, request.Page);
-            var _mapUsers = AutoMapper.Mapper.Map<List<UsersView>>(users);
-            return Ok(_mapUsers);
+            var mapUsers = AutoMapper.Mapper.Map<List<UsersView>>(users);
+            return Ok(mapUsers);
         }
 
     }

@@ -60,7 +60,7 @@ namespace Service.Implementations
                 var conf = new Confirmation();
                 confirm.Email = email;
                 confirm.Rand = random;
-                confirm.Created_at = DateTime.Now;
+                confirm.CreatedAt = DateTime.Now;
                 await confirmRepository.CreateAsync(conf);
                 await confirmRepository.SaveAsync();
             
@@ -74,7 +74,7 @@ namespace Service.Implementations
         public  User GetUser(string email, string password)
         {
             var user =  userRepository.GetIncludingAll(u => u.RoleID == u.Role.ID && u.Email == email && Secure.Encryptpass(password) == u.Password);
-            if (user == null || user.Deleted_at != null) return null;
+            if (user == null || user.DeletedAt != null) return null;
             if (user.Blocked == true) if (user.BlockedUntil < DateTime.Now) user.Blocked = false;
             return user;
 
@@ -87,7 +87,7 @@ namespace Service.Implementations
                 return false;
 
             var user = await userRepository.GetAsync(u => u.Email == confirm.Email);
-            if (confirm.Created_at.AddHours(24) >= DateTime.Now)
+            if (confirm.CreatedAt.AddHours(24) >= DateTime.Now)
             {
                 user.Activated = true;
                 confirmRepository.Delete(confirms);
@@ -126,7 +126,7 @@ namespace Service.Implementations
             var confirm = new Confirmation();
             confirm.Email = email;
             confirm.Rand = random;
-            confirm.Created_at = DateTime.Now;
+            confirm.CreatedAt = DateTime.Now;
             await confirmRepository.CreateAsync(confirm);
             await confirmRepository.SaveAsync();
             return true;
@@ -141,13 +141,13 @@ namespace Service.Implementations
 
             if (confirm.Rand == number)
             {
-                if (confirm.Created_at.AddHours(24) >= DateTime.Now)
+                if (confirm.CreatedAt.AddHours(24) >= DateTime.Now)
                 {
                     string new_password = RandomPassword.Generate();
                     if (Mail.SendRandomPassword(email, new_password))
                     {
                         var user = await userRepository.GetAsync(u => u.Email == email);
-                        if (user.Deleted_at != null) return false;
+                        if (user.DeletedAt != null) return false;
 
                         user.Password = Secure.Encryptpass(new_password);
                         confirmRepository.Delete(confirm);
@@ -165,7 +165,7 @@ namespace Service.Implementations
         public async Task<bool> ChangePassword(int id, string old_password, string new_password)
         {
             var user = await userRepository.GetAsync(u => u.ID == id && u.Password == Secure.Encryptpass(old_password));
-            if (user == null || user.Deleted_at != null) return false;
+            if (user == null || user.DeletedAt != null) return false;
 
             user.Password = Secure.Encryptpass(new_password);
 
@@ -186,7 +186,7 @@ namespace Service.Implementations
             var confirm = new Confirmation();
             confirm.Email = email;
             confirm.Rand = random;
-            confirm.Created_at = DateTime.Now;
+            confirm.CreatedAt = DateTime.Now;
             await confirmRepository.CreateAsync(confirm);
             await confirmRepository.SaveAsync();
             return true;
@@ -197,7 +197,7 @@ namespace Service.Implementations
         public async Task<bool> ChangeRole(int change_id, int new_role, int user_id)
         {
             var user = await userRepository.GetAsync(u => u.ID == change_id);
-            if (user == null || user.Deleted_at != null) return false;
+            if (user == null || user.DeletedAt != null) return false;
             if (new_role <= 0 || new_role > 4) return false;
             if (new_role == Roles.Admin)
             {
@@ -226,9 +226,9 @@ namespace Service.Implementations
         public async Task<bool> DeleteUser(int id)
         {
             var user = await userRepository.GetAsync(u => u.ID == id);
-            if (user == null || user.Deleted_at != null) return false;
+            if (user == null || user.DeletedAt != null) return false;
 
-            user.Deleted_at = DateTime.Now;
+            user.DeletedAt = DateTime.Now;
             await userRepository.SaveAsync();
 
             return true;
@@ -237,7 +237,7 @@ namespace Service.Implementations
         public async Task<bool> PatchUser(int id, User patch_user)
         {
             var user = await userRepository.GetAsync(u => u.ID == id);
-            if (user == null || user.Deleted_at != null) return false;
+            if (user == null || user.DeletedAt != null) return false;
 
             if (patch_user.FirstName != null)
                 user.FirstName = patch_user.FirstName;
@@ -260,14 +260,14 @@ namespace Service.Implementations
         public async Task<User> GetUserByIDAsync(int id)
         {
             var user = await userRepository.GetAsync(x => x.ID == id);
-            if (user == null || user.Deleted_at != null) return null;
+            if (user == null || user.DeletedAt != null) return null;
             return user;
         }
 
         public async Task<bool> BlockUserAsync(int id)
         {
             var user = await userRepository.GetAsync(x => x.ID == id);
-            if (user == null || user.Deleted_at != null) return false;
+            if (user == null || user.DeletedAt != null) return false;
             user.Blocked = true;
             user.BlockedUntil = DateTime.Now.AddDays(10);
             await userRepository.SaveAsync();
@@ -277,7 +277,7 @@ namespace Service.Implementations
         public async Task<bool> UnBlockUser(int id)
         {
             var user = await userRepository.GetAsync(x => x.ID == id);
-            if (user == null || user.Deleted_at != null) return false;
+            if (user == null || user.DeletedAt != null) return false;
             user.Blocked = false;
             user.BlockedUntil = null;
             await userRepository.SaveAsync();

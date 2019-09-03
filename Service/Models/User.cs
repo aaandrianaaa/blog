@@ -11,12 +11,10 @@ using System.Threading.Tasks;
 namespace Service.Models
 {
     [Table("users")]
-    public class User
+    public class User: Base
     {
         public static object Claims { get; internal set; }
-        [ForeignKey("AuthorID ")]
-        [Column(name: "id")]
-        public int ID { get; set; }
+    
         [Column(name: "first_name")]
         public string FirstName { get; set; }
         [Column(name: "last_name")]
@@ -43,15 +41,7 @@ namespace Service.Models
         
         [Column(name: "activated")]
         public bool Activated { get; set; } = false;
-       
-        [Column(name: "created_at")]
-        public DateTime Created_at { get; set; }
-       
-        [Column(name: "deleted_at")]
-        public DateTime? Deleted_at { get; set; }
-        
-        [Column(name: "updated_at")]
-        public DateTime Updated_at { get; set; }
+      
 
         [Column(name: "blocked")]
         public bool Blocked { get; set; } = false;

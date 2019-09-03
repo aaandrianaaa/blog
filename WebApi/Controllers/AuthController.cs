@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Requests;
+using WebApi.ViewModel;
 //using static System.Collections.Specialized.BitVector32;
 
 namespace WebApi.Controllers
@@ -33,10 +34,11 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
 
-            string token;
-            if (_authService.IsAuthenticated(request, out token))
+            if (_authService.IsAuthenticated(request, out var token))
             {
-                return Ok(token);
+                return Ok(new LoginView() {
+                    Token = token
+                });
             }
 
             return BadRequest();

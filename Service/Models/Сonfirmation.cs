@@ -7,10 +7,8 @@ namespace Service.Models
 {
 
     [Table("confirmation")]
-  public  class Confirmation
+  public  class Confirmation: Base
     {
-        [Column(name: "id")]
-        public int ID { get; set; }
 
         [ForeignKey("Email")]
         [Column(name: "email")]
@@ -19,7 +17,6 @@ namespace Service.Models
         [Column(name: "random_number")]
         public int Rand { get; set; }
 
-        [Column(name: "created_at")]
-        public DateTime Created_at { get; set; }
+      
     }
 }
