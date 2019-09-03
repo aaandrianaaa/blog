@@ -44,12 +44,6 @@ namespace WebApi.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-       // [System.ServiceModel.OperationContract]
-        public IActionResult Logout()
-        {
-            return Ok();
-        }
 
     
 

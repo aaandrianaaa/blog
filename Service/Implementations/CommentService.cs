@@ -105,7 +105,8 @@ namespace Service.Implementations
 
         public async Task<List<User>> ListUserLikesAsync (int CommentId)
         {
-            var users =  _likeRepository.GetUsers(x => x.CommentId == CommentId);
+         
+            var users =  _likeRepository.GetUsers(x => x.CommentId == CommentId && x.LikeIt == true);
             return users;
         }
 

@@ -22,11 +22,13 @@ namespace WebApi.Controllers
     public class ArticleController : ControllerBase
     {
         private readonly IArticleService _articleService;
+        private readonly ICommentService _commentService;
 
-        public ArticleController(IArticleService articleService)
+        public ArticleController(IArticleService _articleService, ICommentService _commentService)
         {
 
-            this._articleService = articleService;
+            this._articleService = _articleService;
+            this._commentService = _commentService;
         }
 
         [AllowAnonymous]
@@ -99,7 +101,7 @@ namespace WebApi.Controllers
             return Ok(mapArticles);
         }
 
-        [HttpPost("rating/{id}")]
+        [HttpPost("{id}/rate")]
         public async Task<IActionResult> Rating(ArticleReitingRequest request, int id)
         {
             if (await _articleService.RatingArticle(id, request.Rating))
@@ -108,7 +110,7 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpPost("saving/{id}")]
+        [HttpPost("{id}/save")]
         public async Task<IActionResult> Saving(int id)
         {
             var userId = User.Claims.GetUserId();
@@ -137,6 +139,14 @@ namespace WebApi.Controllers
             var articles = await _articleService.ArticlesByThisAuthor(id, request.Limit, request.Page);
             var mapArticle = AutoMapper.Mapper.Map<List<ArticlesView>>(articles);
             return Ok(mapArticle);
+        }
+        [AllowAnonymous]
+        [HttpGet("{id}/comments")]
+        public async Task<IActionResult> GetCommentsByArticleId(int id, [FromQuery]Paginating request)
+        {
+            var comments = await _commentService.GetByArticleIdAsync(id, request.Limit, request.Page);
+            var mapComment = AutoMapper.Mapper.Map<List<CommentsView>>(comments);
+            return Ok(mapComment);
         }
     }
 }

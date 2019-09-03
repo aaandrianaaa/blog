@@ -51,6 +51,9 @@ namespace WebApi
             AutoMapperConfiguration.Configure();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDependencies();
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Employee API", Version = "V1" });
+            });
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BlogContext>(options => options.UseNpgsql(connection));
@@ -81,6 +84,10 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "post API V1");
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -73,7 +73,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = "Admin, Moderator")]
-        [HttpPost("change/role/{id}")]
+        [HttpPost("{id}/role")]
         public async Task<IActionResult> ChangeRole(int id, NewRoleRequest request)
         {
             var userId = User.Claims.GetUserId();
@@ -98,7 +98,7 @@ namespace WebApi.Controllers
 
 
         [Authorize]
-        [HttpPost("pathc")]
+        [HttpPatch("")]
         public async Task<IActionResult> PatchUser(PatchUserRequest request)
         {
             var userId = User.Claims.GetUserId();
@@ -123,7 +123,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles ="Moderator, Admin")]
-        [HttpPost("block/{id}")]
+        [HttpPost("{id}/block")]
         public async Task<IActionResult> BlockUser (int id)
 
         {
@@ -132,7 +132,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = "Moderator, Admin")]
-        [HttpPost("unblock/{id}")]
+        [HttpPost("{id}/unblock")]
         public async Task<IActionResult> UnBlockUser(int id)
 
         {
@@ -141,7 +141,7 @@ namespace WebApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("list")]
+        [HttpGet("")]
         public async Task<IActionResult> UsersList([FromQuery]Paginating request)
         {
             

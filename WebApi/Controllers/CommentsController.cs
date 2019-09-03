@@ -26,24 +26,17 @@ namespace WebApi.Controllers
             this._commentService = _commentService;
         }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Create(CreateCommentRequest request, int id)
+        [HttpPost("{article_id}")]
+        public async Task<IActionResult> Create(CreateCommentRequest request, int article_id)
         {
             var userId = User.Claims.GetUserId();
             if (userId == null) return BadRequest();
-            if (await _commentService.Create(id, userId.Value, request.Text)) return Ok();
+            if (await _commentService.Create(article_id, userId.Value, request.Text)) return Ok();
             return BadRequest();
         }
 
 
-        [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCommentsByArticleId(int id, [FromQuery]Paginating request)
-        {
-            var comments = await _commentService.GetByArticleIdAsync(id, request.Limit, request.Page);
-            var mapComment = AutoMapper.Mapper.Map<List<CommentsView>>(comments);
-            return Ok(mapComment);
-        }
+    
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateCommentAsync(int id, PatchCommentRequest request)
@@ -72,7 +65,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpGet("like/{id}/users")]
+        [HttpGet("{id}/liked/users")]
         public async Task<IActionResult> GetUsersLikesListAsync(int id)
         {
             var users = await _commentService.ListUserLikesAsync(id);

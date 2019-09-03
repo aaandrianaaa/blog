@@ -11,7 +11,7 @@ using Service.Extensions;
 
 namespace WebApi.Controllers
 {
-    [Route("v1/api/users/password")]
+    [Route("v1/api/password")]
     [ApiController]
     public class PasswordController : ControllerBase
     {
