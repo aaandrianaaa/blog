@@ -19,6 +19,8 @@ using Service.Interfaces;
 using Service.Models;
 using Service.Repositories;
 using Service.ServiceCollections;
+using WebApi.Extension;
+using WebApi.Jobs;
 using WebApi.Mapper;
 
 namespace WebApi
@@ -54,6 +56,9 @@ namespace WebApi
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Employee API", Version = "V1" });
             });
+
+            QuartzExtensions.UseQuartz(services, typeof(UserJob));
+            Scheduler.Start();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BlogContext>(options => options.UseNpgsql(connection));

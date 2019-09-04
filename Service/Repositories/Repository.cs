@@ -100,5 +100,11 @@ namespace Service.Repositories
 
             return  query.Where(where).ToList();
         }
+
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> where)
+        {
+            return await _dbSet.Where(where).ToListAsync();
+
+        }
     }
 }

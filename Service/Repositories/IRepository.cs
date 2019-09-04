@@ -19,7 +19,7 @@ namespace Service.Repositories
         T GetWithInclude(Expression<Func<T, bool>> where, params string[] include);
         T GetIncludingAll(Expression<Func<T, bool>> where);
        List<T> GetManyIncludingAll(Expression<Func<T, bool>> where);
-
+        Task<List<T>> GetListAsync(Expression<Func<T, bool>> where);
 
     }
 }

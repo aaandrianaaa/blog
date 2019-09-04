@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Service.Helper;
+﻿using Service.Helper;
 using Service.Interfaces;
 using Service.Models;
 using Service.Repositories;

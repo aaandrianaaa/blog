@@ -18,3 +18,12 @@ C:\Users\Andriana\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0
 C:\Users\Andriana\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0\System.IdentityModel.Tokens.Jwt.xml
 C:\Users\Andriana\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll
 C:\Users\Andriana\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.xml
+D:\source\repos\WebApplication18\Service\obj\Debug\netstandard2.0\Service.csprojAssemblyReference.cache
+D:\source\repos\WebApplication18\Service\obj\Debug\netstandard2.0\Service.csproj.CoreCompileInputs.cache
+D:\source\repos\WebApplication18\Service\obj\Debug\netstandard2.0\Service.AssemblyInfoInputs.cache
+D:\source\repos\WebApplication18\Service\obj\Debug\netstandard2.0\Service.AssemblyInfo.cs
+D:\source\repos\WebApplication18\Service\obj\Debug\netstandard2.0\Service.dll
+D:\source\repos\WebApplication18\Service\obj\Debug\netstandard2.0\Service.pdb
+D:\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0\Service.deps.json
+D:\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0\Service.dll
+D:\source\repos\WebApplication18\Service\bin\Debug\netstandard2.0\Service.pdb

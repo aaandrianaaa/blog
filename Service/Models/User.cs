@@ -49,6 +49,8 @@ namespace Service.Models
         [Column (name: "blocked_until")]
 
         public DateTime? BlockedUntil { get; set; }
+
+        public double Rating { get; set; } = 0;
        
     }
 }
