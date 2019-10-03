@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\WebApi\\WebApi.csproj": {}
+    "D:\\work\\blog\\WebApi\\WebApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj": {
+    "D:\\work\\blog\\Service\\Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj",
+        "projectUniqueName": "D:\\work\\blog\\Service\\Service.csproj",
         "projectName": "Service",
-        "projectPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj",
+        "projectPath": "D:\\work\\blog\\Service\\Service.csproj",
         "packagesPath": "C:\\Users\\Andriana\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\obj\\",
+        "outputPath": "D:\\work\\blog\\Service\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -63,33 +63,55 @@
               "target": "Package",
               "version": "[2.2.6, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[5.5.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
               "version": "[2.0.3, )",
               "autoReferenced": true
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.0.7, )"
+            },
             "RestSharp": {
               "target": "Package",
               "version": "[106.6.10, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[5.5.0, )"
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\WebApi\\WebApi.csproj": {
+    "D:\\work\\blog\\WebApi\\WebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\WebApi\\WebApi.csproj",
+        "projectUniqueName": "D:\\work\\blog\\WebApi\\WebApi.csproj",
         "projectName": "WebApi",
-        "projectPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\WebApi\\WebApi.csproj",
+        "projectPath": "D:\\work\\blog\\WebApi\\WebApi.csproj",
         "packagesPath": "C:\\Users\\Andriana\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\WebApi\\obj\\",
+        "outputPath": "D:\\work\\blog\\WebApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -108,8 +130,8 @@
         "frameworks": {
           "netcoreapp2.2": {
             "projectReferences": {
-              "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj": {
-                "projectPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj"
+              "D:\\work\\blog\\Service\\Service.csproj": {
+                "projectPath": "D:\\work\\blog\\Service\\Service.csproj"
               }
             }
           }
@@ -146,6 +168,10 @@
               "target": "Package",
               "version": "[2.2.6, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[5.5.0, )"
+            },
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
               "target": "Package",
@@ -163,13 +189,39 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[2.2.4, )"
+            },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.0.7, )"
+            },
+            "Swashbuckle.AspNetCore.Swagger": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerGen": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerUi": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[5.5.0, )"
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -148,8 +148,8 @@ namespace WebApi.Mapper
                 .ForMember(a => a.ViewCount, map => map.MapFrom(a => a.ViewCount))
                 .ForMember(a => a.Category, map => map.MapFrom(a => a.Category))
                 .ForMember(a => a.Author, map => map.MapFrom(a => a.Author));
-               
-                
+
+
 
             CreateMap<User, UserView>()
                  .ForMember(u => u.ID, map => map.MapFrom(u => u.ID))
@@ -159,7 +159,8 @@ namespace WebApi.Mapper
                 .ForMember(u => u.AboutUser, map => map.MapFrom(m => m.AboutUser))
                 .ForMember(u => u.Age, map => map.MapFrom(m => m.Age))
                 .ForMember(u => u.BirthdayDate, map => map.MapFrom(m => m.BirthdayDate))
-                .ForMember(u => u.CreatedAt, map => map.MapFrom(u => u.CreatedAt));
+                .ForMember(u => u.CreatedAt, map => map.MapFrom(u => u.CreatedAt))
+                .ForMember(u => u.Avatar, map => map.MapFrom(u => u.Avatar));
 
             CreateMap<Category, CategoryView>()
                  .ForMember(c => c.Name, map => map.MapFrom(m => m.Name))

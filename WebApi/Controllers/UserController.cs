@@ -14,6 +14,8 @@ using Service.Models;
 using WebApi.Requests;
 using WebApi.ViewModel;
 using Service.Extensions;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WebApi.Controllers
 {
@@ -24,11 +26,13 @@ namespace WebApi.Controllers
     {
         private readonly IAuthenticateService _authService;
         private readonly IUserManagementService _userService;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public UserController(IAuthenticateService authService, IUserManagementService userService)
+        public UserController(IAuthenticateService authService, IUserManagementService userService, IHostingEnvironment hostingEnvironment)
         {
             _authService = authService;
             _userService = userService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [AllowAnonymous]
@@ -150,5 +154,28 @@ namespace WebApi.Controllers
             return Ok(mapUsers);
         }
 
+        [Authorize]
+        [HttpPost("photo")]
+        public async Task <IActionResult> PostPhotoAsync(IFormFile file)
+        {
+            var userID = User.Claims.GetUserId();
+            if (userID == null)
+            {
+                return BadRequest();
+            }
+            var size = file.Length;
+            var fileName = userID.Value.ToString()  + ".png";
+            var filePath = _hostingEnvironment.ContentRootPath + "/Images" + "/" + fileName;
+            if (size > 0)
+            {
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+
+            return Ok(new { size, filePath });
+
+        }
     }
 }

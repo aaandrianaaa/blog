@@ -22,6 +22,6 @@ namespace WebApi.ViewModel
    
         public DateTime BirthdayDate { get; set; }
         public DateTime CreatedAt { get; set; }
-       
+        public byte[] Avatar { get; set; }
     }
 }

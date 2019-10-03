@@ -7,6 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace Service.Implementations
 {
@@ -14,10 +19,13 @@ namespace Service.Implementations
     {
         readonly IUserRepository userRepository;
         readonly IConfirmRepository confirmRepository;
+        
+
         public UserManagementService(IUserRepository userRepository, IConfirmRepository confirmRepository)
         {
             this.userRepository = userRepository;
             this.confirmRepository = confirmRepository;
+          
         }
 
         public async Task<bool> CreateAsync(User user)
@@ -74,6 +82,7 @@ namespace Service.Implementations
             var user =  userRepository.GetIncludingAll(u => u.RoleID == u.Role.ID && u.Email == email && Secure.Encryptpass(password) == u.Password);
             if (user == null || user.DeletedAt != null) return null;
             if (user.Blocked == true) if (user.BlockedUntil < DateTime.Now) user.Blocked = false;
+
             return user;
 
         }
@@ -259,6 +268,11 @@ namespace Service.Implementations
         {
             var user = await userRepository.GetAsync(x => x.ID == id);
             if (user == null || user.DeletedAt != null) return null;
+
+            
+            var fileName = "Images" + "/" + id.ToString() + ".png";
+            user.Avatar = File.ReadAllBytes(fileName);
+
             return user;
         }
 
@@ -292,4 +306,6 @@ namespace Service.Implementations
             return true;
         }
     }
+
+   
 }

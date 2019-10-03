@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj": {}
+    "D:\\work\\blog\\Service\\Service.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj": {
+    "D:\\work\\blog\\Service\\Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj",
+        "projectUniqueName": "D:\\work\\blog\\Service\\Service.csproj",
         "projectName": "Service",
-        "projectPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\Service.csproj",
+        "projectPath": "D:\\work\\blog\\Service\\Service.csproj",
         "packagesPath": "C:\\Users\\Andriana\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andriana\\source\\repos\\WebApplication18\\Service\\obj\\",
+        "outputPath": "D:\\work\\blog\\Service\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -63,22 +63,44 @@
               "target": "Package",
               "version": "[2.2.6, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[5.5.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
               "version": "[2.0.3, )",
               "autoReferenced": true
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.0.7, )"
+            },
             "RestSharp": {
               "target": "Package",
               "version": "[106.6.10, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[5.5.0, )"
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

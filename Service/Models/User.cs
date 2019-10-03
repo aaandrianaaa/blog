@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-
+using static System.Net.WebRequestMethods;
 
 namespace Service.Models
 {
@@ -42,15 +42,15 @@ namespace Service.Models
         [Column(name: "activated")]
         public bool Activated { get; set; } = false;
       
-
         [Column(name: "blocked")]
         public bool Blocked { get; set; } = false;
 
         [Column (name: "blocked_until")]
-
         public DateTime? BlockedUntil { get; set; }
 
         public double Rating { get; set; } = 0;
-       
+
+        [NotMapped]
+        public byte[] Avatar { get; set; }
     }
 }
