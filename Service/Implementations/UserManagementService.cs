@@ -19,13 +19,15 @@ namespace Service.Implementations
     {
         readonly IUserRepository userRepository;
         readonly IConfirmRepository confirmRepository;
+        readonly IImageRepository imageRepository;
         
 
-        public UserManagementService(IUserRepository userRepository, IConfirmRepository confirmRepository)
+        public UserManagementService(IUserRepository userRepository, IConfirmRepository confirmRepository, IImageRepository imageRepository)
         {
             this.userRepository = userRepository;
             this.confirmRepository = confirmRepository;
-          
+            this.imageRepository = imageRepository;
+
         }
 
         public async Task<bool> CreateAsync(User user)
@@ -77,11 +79,12 @@ namespace Service.Implementations
         }
 
 
-        public  User GetUser(string email, string password)
+        public async Task<User> GetUserAsync(string email, string password)
         {
             var user =  userRepository.GetIncludingAll(u => u.RoleID == u.Role.ID && u.Email == email && Secure.Encryptpass(password) == u.Password);
             if (user == null || user.DeletedAt != null) return null;
             if (user.Blocked == true) if (user.BlockedUntil < DateTime.Now) user.Blocked = false;
+            user.Avatar = await  imageRepository.GetAvatarAsync(user.ID);
 
             return user;
 
@@ -269,9 +272,8 @@ namespace Service.Implementations
             var user = await userRepository.GetAsync(x => x.ID == id);
             if (user == null || user.DeletedAt != null) return null;
 
-            
-            var fileName = "Images" + "/" + id.ToString() + ".png";
-            user.Avatar = File.ReadAllBytes(fileName);
+
+            user.Avatar = await imageRepository.GetAvatarAsync(id);
 
             return user;
         }
@@ -298,12 +300,27 @@ namespace Service.Implementations
 
         public async Task<List<User>> UsersList(int limit, int page)
         {
-            return await userRepository.GetListOfAll(limit, page);
+            var list = await userRepository.GetListOfAll(limit, page);
+                     
+             foreach (var user in list)
+            {
+                user.Avatar = await imageRepository.GetAvatarAsync(user.ID);
+            }
+
+            return list;
         }
 
         public bool TopWriters()
         {
             return true;
+        }
+
+
+        public async Task<bool> PostPhotoAsync(IFormFile file, int? UserId)
+        {
+            if (!await imageRepository.PostPhotoAsync(file, UserId)) return false;
+            return true;
+
         }
     }
 

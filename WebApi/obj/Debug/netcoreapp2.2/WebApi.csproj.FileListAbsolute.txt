@@ -40,7 +40,6 @@ D:\work\blog\WebApi\bin\Debug\netcoreapp2.2\WebApi.pdb
 D:\work\blog\WebApi\bin\Debug\netcoreapp2.2\Service.dll
 D:\work\blog\WebApi\bin\Debug\netcoreapp2.2\Service.pdb
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.csprojAssemblyReference.cache
-D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.csproj.CoreCompileInputs.cache
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.RazorAssemblyInfo.cache
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.RazorAssemblyInfo.cs
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.AssemblyInfoInputs.cache
@@ -49,3 +48,6 @@ D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.RazorTargetAssemblyInfo.cache
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.csproj.CopyComplete
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.dll
 D:\work\blog\WebApi\obj\Debug\netcoreapp2.2\WebApi.pdb
+D:\work\blog\WebApi\bin\Debug\netcoreapp2.2\appsettings.Development.json
+D:\work\blog\WebApi\bin\Debug\netcoreapp2.2\appsettings.json
+D:\work\blog\WebApi\bin\Debug\netcoreapp2.2\Properties\launchSettings.json

@@ -1,4 +1,4 @@
-﻿using Service.Helper;
+﻿ using Service.Helper;
 using Service.Interfaces;
 using Service.Models;
 using Service.Repositories;
@@ -12,22 +12,24 @@ namespace Service.Implementations
     public class CommentService : ICommentService
 
     {
-        BlogContext db;
+       
         private readonly ICommentRepository _commentRepository;
         private readonly ILikeRepository _likeRepository;
         private readonly IUserRepository _userRepository;
-        public CommentService(BlogContext db, ICommentRepository commentRepository, ILikeRepository likeRepository, IUserRepository userRepository)
+        private readonly IImageRepository _imageRepository;
+        public CommentService(ICommentRepository commentRepository, ILikeRepository likeRepository, IUserRepository userRepository, IImageRepository imageRepository)
         {
-            this.db = db;
+            
             _commentRepository = commentRepository;
             _likeRepository = likeRepository;
             _userRepository = userRepository;
+            _imageRepository = imageRepository;
         }
 
         public async Task<bool> Create(int articleId, int userId, string text)
         {
 
-            var coment = new Comment
+            var comment = new Comment
             {
                 ArticleID = articleId,
                 UserID = userId,
@@ -36,8 +38,8 @@ namespace Service.Implementations
                 UpdatedAt = DateTime.Now,
 
             };
-            await db.Comments.AddAsync(coment);
-            await db.SaveChangesAsync();
+            await _commentRepository.CreateAsync(comment);
+            await _commentRepository.SaveAsync();
 
             return true;
         }
@@ -45,6 +47,11 @@ namespace Service.Implementations
         public async Task<List<Comment>> GetByArticleIdAsync(int id, int limit, int page)
         {
             var comments = await _commentRepository.GetManyIncludingAllAsync(c => c.ArticleID == id && c.DeletedAt == null, limit, page);
+            foreach (var comment in comments)
+            {
+                comment.User.Avatar = await _imageRepository.GetAvatarAsync(comment.User.ID);
+            }
+
             return comments;
         }
 
@@ -107,6 +114,7 @@ namespace Service.Implementations
         {
          
             var users =  _likeRepository.GetUsers(x => x.CommentId == CommentId && x.LikeIt == true);
+            foreach (var user in users) user.Avatar = await _imageRepository.GetAvatarAsync(user.ID);
             return users;
         }
 

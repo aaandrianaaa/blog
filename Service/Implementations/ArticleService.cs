@@ -18,15 +18,17 @@ namespace Service.Implementations
        private readonly ICategoryRepository _categoryRepository;
        private readonly ISavedArticlesRepository _savedArticlesRepository;
        private readonly ICommentRepository _commentRepository;
+        private readonly IImageRepository _imageRepository;
        
 
-        public ArticleService(IArticleRepository articleRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ISavedArticlesRepository savedArticlesRepository, ICommentRepository commentRepository)
+        public ArticleService(IArticleRepository articleRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ISavedArticlesRepository savedArticlesRepository, ICommentRepository commentRepository, IImageRepository imageRepository)
         {
             _articleRepository = articleRepository;
             _userRepository = userRepository;
             _categoryRepository = categoryRepository;
             _savedArticlesRepository = savedArticlesRepository;
             _commentRepository = commentRepository;
+            _imageRepository = imageRepository;
           
         }
 
@@ -38,13 +40,15 @@ namespace Service.Implementations
             if (article == null) return null;
             article.ViewCount++;
             await _articleRepository.SaveAsync();
+            article.Author.Avatar = await _imageRepository.GetAvatarAsync(article.AuthorID);
             return article;
         }
 
         public async Task<List<Article>> GetList(int limit, int page)
         {
-            var article = await _articleRepository.GetManyIncludingAllAsync(a => a.DeletedAt == null, limit, page);
-            return article;
+            var articles = await _articleRepository.GetManyIncludingAllAsync(a => a.DeletedAt == null, limit, page);
+            foreach (var article in articles) article.Author.Avatar = await _imageRepository.GetAvatarAsync(article.AuthorID);
+            return articles;
 
         }
 
@@ -94,26 +98,12 @@ namespace Service.Implementations
 
         }
 
-        public Task<List<Article>> GetByCategoryId(int categoryId, int limit, int page)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> RatingArticle(int id, int rating)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<SavedArticles>> GetSavedArticles(int id, int limit, int page)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public async Task<List<Article>> GetByCategoryIdAsync(int categoryId, int limit, int page)
         {
-            var article = await _articleRepository.GetManyIncludingAllAsync((a => a.CategoryID == a.Category.ID && a.DeletedAt == null && a.Author.ID == a.AuthorID), limit, page);
-            return article;
+            var articles = await _articleRepository.GetManyIncludingAllAsync((a => a.CategoryID == a.Category.ID && a.DeletedAt == null && a.Author.ID == a.AuthorID), limit, page);
+            foreach (var article in articles) article.Author.Avatar = await _imageRepository.GetAvatarAsync(article.AuthorID);
+            return articles;
         }
 
 
@@ -136,7 +126,7 @@ namespace Service.Implementations
         public async Task<List<SavedArticles>> GetSavedArticlesAsync(int id, int limit, int page)
         {
             var articles = await _savedArticlesRepository.GetManyIncludingAllAsync((a => a.UsreID == id && a.User.ID == a.UsreID && a.ArticleID == a.Article.ID && a.Article.AuthorID == a.Article.Author.ID), limit, page);
-
+            foreach (var article in articles) article.Article.Author.Avatar = await _imageRepository.GetAvatarAsync(article.Article.AuthorID);
             return articles;
         }
 
@@ -157,6 +147,7 @@ namespace Service.Implementations
         public async Task<List<Article>> ArticlesByThisAuthor(int id, int limit, int page)
         {
             var articles = await _articleRepository.GetManyIncludingAllAsync((a => a.AuthorID == id && a.Author.ID == a.AuthorID && a.Category.ID == a.CategoryID), limit, page);
+            foreach (var article in articles) article.Author.Avatar = await _imageRepository.GetAvatarAsync(article.AuthorID);
             return articles;
         }
 

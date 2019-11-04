@@ -17,6 +17,8 @@ namespace Service.ServiceCollections
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<ICommentService, CommentService>();
+            
+                
 
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));     
             services.AddTransient<IArticleRepository, ArticleRepository>();
@@ -26,6 +28,7 @@ namespace Service.ServiceCollections
             services.AddTransient<IConfirmRepository, ConfirmRepository>();
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<ILikeRepository, LikeRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
 
             return services;
         }

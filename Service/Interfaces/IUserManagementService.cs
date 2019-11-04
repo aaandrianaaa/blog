@@ -1,4 +1,5 @@
-﻿using Service.Models;
+﻿using Microsoft.AspNetCore.Http;
+using Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Service.Interfaces
 {
     public interface IUserManagementService
     {
-        User GetUser(string username, string password);
+       Task<User> GetUserAsync(string username, string password);
         Task<bool> CreateAsync(User user);
 
         Task<bool> CofirmMail(Confirmation confirm);
@@ -25,6 +26,7 @@ namespace Service.Interfaces
         Task<bool> BlockUserAsync(int id);
         Task<bool> UnBlockUser(int id);
         Task<List<User>> UsersList(int limit, int page);
+        Task<bool> PostPhotoAsync(IFormFile file, int? UserId);
 
 
     }

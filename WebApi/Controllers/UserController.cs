@@ -159,23 +159,10 @@ namespace WebApi.Controllers
         public async Task <IActionResult> PostPhotoAsync(IFormFile file)
         {
             var userID = User.Claims.GetUserId();
-            if (userID == null)
-            {
-                return BadRequest();
-            }
-            var size = file.Length;
-            var fileName = userID.Value.ToString()  + ".png";
-            var filePath = _hostingEnvironment.ContentRootPath + "/Images" + "/" + fileName;
-            if (size > 0)
-            {
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-            }
-
-            return Ok(new { size, filePath });
-
+            if (userID == null) return BadRequest();
+            if (!await _userService.PostPhotoAsync(file, userID)) return BadRequest();
+            return Ok();
+           
         }
     }
 }

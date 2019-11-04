@@ -93,7 +93,8 @@ namespace WebApi.Mapper
             CreateMap<User, UsersView>()
 
                 .ForMember(u=> u.ID, map => map.MapFrom(u=> u.ID))
-                .ForMember(u => u.Nickname, map => map.MapFrom(m => m.Nickname));
+                .ForMember(u => u.Nickname, map => map.MapFrom(m => m.Nickname))
+                .ForMember(u => u.Avatar, map => map.MapFrom(u => u.Avatar)); 
 
 
 

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
 
 namespace Service.Implementations
 {
@@ -21,14 +22,14 @@ namespace Service.Implementations
             _userManagementService = service;
             _tokenManagement = tokenManagement.Value;
         }
-        public bool IsAuthenticated(TokenRequest request, out string token)
+        public async Task<string> IsAuthenticated(TokenRequest request)
         {
 
-            token = string.Empty;
+          string token = string.Empty;
 
-            var user = _userManagementService.GetUser(request.Email, request.Password);
+            var user = await _userManagementService.GetUserAsync(request.Email, request.Password);
             if (user.Blocked == true && user.BlockedUntil < DateTime.Now) user.Blocked = false;
-            if (user == null || user.DeletedAt != null || user.Blocked || !user.Activated) return false;
+            if (user == null || user.DeletedAt != null || user.Blocked || !user.Activated) return null ;
           
             var claim = new[]
             {
@@ -48,8 +49,9 @@ namespace Service.Implementations
             );
             token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
-            return true;
-
+            if (token != null)
+            return token;
+            return null;
         }
     }
 }

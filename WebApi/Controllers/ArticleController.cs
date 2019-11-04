@@ -95,7 +95,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetByCategory(int categoryId, [FromQuery]Paginating request)
         {
 
-            var articles = await _articleService.GetByCategoryId(categoryId, request.Limit, request.Page);
+            var articles = await _articleService.GetByCategoryIdAsync(categoryId, request.Limit, request.Page);
             var mapArticles = AutoMapper.Mapper.Map<List<ArticlesView>>(articles);
 
             return Ok(mapArticles);
@@ -104,7 +104,7 @@ namespace WebApi.Controllers
         [HttpPost("{id}/rate")]
         public async Task<IActionResult> Rating(ArticleReitingRequest request, int id)
         {
-            if (await _articleService.RatingArticle(id, request.Rating))
+            if (await _articleService.RatingArticleAsync(id, request.Rating))
                 return Ok();
             return BadRequest();
         }
@@ -126,7 +126,7 @@ namespace WebApi.Controllers
         {
             var userId = User.Claims.GetUserId();
             if (!userId.HasValue) return BadRequest();
-            var articles = await _articleService.GetSavedArticles(userId.Value, request.Limit, request.Page);
+            var articles = await _articleService.GetSavedArticlesAsync(userId.Value, request.Limit, request.Page);
             var mapArticles = AutoMapper.Mapper.Map<List<SavedArticleView>>(articles);
 
             return Ok(mapArticles);

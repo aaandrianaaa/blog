@@ -31,7 +31,6 @@ D:\work\blog\Service\bin\Debug\netstandard2.0\Service.deps.json
 D:\work\blog\Service\bin\Debug\netstandard2.0\Service.dll
 D:\work\blog\Service\bin\Debug\netstandard2.0\Service.pdb
 D:\work\blog\Service\obj\Debug\netstandard2.0\Service.csprojAssemblyReference.cache
-D:\work\blog\Service\obj\Debug\netstandard2.0\Service.csproj.CoreCompileInputs.cache
 D:\work\blog\Service\obj\Debug\netstandard2.0\Service.AssemblyInfoInputs.cache
 D:\work\blog\Service\obj\Debug\netstandard2.0\Service.AssemblyInfo.cs
 D:\work\blog\Service\obj\Debug\netstandard2.0\Service.dll

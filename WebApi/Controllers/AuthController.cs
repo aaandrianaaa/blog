@@ -27,18 +27,21 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(Service.Models.TokenRequest request)
+        public async  Task<IActionResult> LoginAsync(Service.Models.TokenRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (_authService.IsAuthenticated(request, out var token))
+            var token = await _authService.IsAuthenticated(request);
+
+            if (token != null)
             {
-                return Ok(new LoginView() {
+                return Ok(new LoginView()
+                {
                     Token = token
-                });
+                }); 
             }
 
             return BadRequest();
