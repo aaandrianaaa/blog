@@ -28,11 +28,12 @@ namespace WebApi.Requests
         [JsonProperty(PropertyName = "password")]
         public string Password { get; set; }
 
+        [Required]
+        [JsonProperty(PropertyName = "confirm_password")]
+        public string ConfirmPassword { get; set; }
+
         [JsonProperty(PropertyName = "about_user")]
         public string AboutUser { get; set; }
-
-        [JsonProperty(PropertyName = "age")]
-        public int? Age { get; set; }
 
         [JsonProperty(PropertyName = "birthday_date")]
         [JsonConverter(typeof(UnixDateTimeConverter))]

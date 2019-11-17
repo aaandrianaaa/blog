@@ -71,8 +71,8 @@ namespace WebApi.Mapper
                 .ForMember(u => u.Nickname, map => map.MapFrom(m => m.Nickname))
                 .ForMember(u => u.Email, map => map.MapFrom(m => m.Email))
                 .ForMember(u => u.Password, map => map.MapFrom(m => Secure.Encryptpass(m.Password)))
+            
                 .ForMember(u => u.AboutUser, map => map.MapFrom(m => m.AboutUser))
-                .ForMember(u => u.Age, map => map.MapFrom(m => m.Age))
                 .ForMember(u => u.BirthdayDate, map => map.MapFrom(m => m.BirthdayDate))
                 .ForMember(u => u.Role, map => map.Ignore())
                 .ForMember(u => u.CreatedAt, map => map.MapFrom(u => DateTime.Now))

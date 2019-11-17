@@ -1,0 +1,79 @@
+
+<div class="auth-page">
+  <div class="container page">
+    <div class="row">
+
+      <div class="col-md-8 offset-md-2 col-xs-12">
+        <h1>Register new doctor</h1>
+
+        <form [formGroup]="registerForm" (ngSubmit)="submit()">
+          <fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="first_name"
+                placeholder="First name"
+                class="form-control form-control-lg"
+                type="text" />
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="last_name"
+                placeholder="Last name"
+                class="form-control form-control-lg"
+                type="text" />
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="nickname"
+                placeholder="Nickname"
+                class="form-control form-control-lg"
+                type="text" />
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="email"
+                placeholder="Email"
+                class="form-control form-control-lg"
+                type="text" />
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="password"
+                placeholder="Password"
+                class="form-control form-control-lg"
+                type="password" />
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="confirm_password"
+                placeholder="Confirm"
+                class="form-control form-control-lg"
+                type="password" />
+            </fieldset>
+
+            <fieldset class="form-group">
+              <input
+                formControlName="about_user"
+                placeholder="About me"
+                class="form-control form-control-lg"
+                type="text" />
+            </fieldset>
+
+            <fieldset class="form-group">
+              <input
+                formControlName="birthday_date"
+                placeholder="Birthday"
+                class="form-control form-control-lg"
+                type="date" />
+              </fieldset>
+
+            <button class="btn btn-lg btn-primary pull-xs-right" type="submit">
+              Submit
+            </button>
+          </fieldset>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -28,6 +28,7 @@ namespace WebApi
 {
     public static class AutoMapperConfiguration
     {
+        [Obsolete]
         public static void Configure()
         {
             AutoMapper.Mapper.Initialize(x =>
@@ -35,7 +36,7 @@ namespace WebApi
                 x.AddProfile<MappingProfile>();
             });
 
-           // AutoMapper.Mapper.Configuration.AssertConfigurationIsValid();
+            // AutoMapper.Mapper.Configuration.AssertConfigurationIsValid();
         }
     }
     public class Startup
@@ -45,17 +46,14 @@ namespace WebApi
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             AutoMapperConfiguration.Configure();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDependencies();
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Employee API", Version = "V1" });
-            });
 
             QuartzExtensions.UseQuartz(services, typeof(UserJob));
             Scheduler.Start();
@@ -84,13 +82,29 @@ namespace WebApi
                     ValidateAudience = false
                 };
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowCredentials().AllowAnyMethod();
+                });
+            });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDependencies();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Employee API", Version = "V1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "post API V1");
             });
             if (env.IsDevelopment())
@@ -102,8 +116,8 @@ namespace WebApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseHttpsRedirection();
             app.UseMvc();
         }

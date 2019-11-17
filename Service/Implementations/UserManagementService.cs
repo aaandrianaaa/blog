@@ -53,7 +53,6 @@ namespace Service.Implementations
 
             return true;
 
-
         }
 
         public async Task<bool> SendConfirmation(string email)
@@ -321,6 +320,13 @@ namespace Service.Implementations
             if (!await imageRepository.PostPhotoAsync(file, UserId)) return false;
             return true;
 
+        }
+
+        public async Task<User> MeAsync (int? UserId)
+        {
+            var user = await userRepository.GetAsync(x => x.ID == UserId);
+            if (user == null || user.DeletedAt != null) return null;
+            return user;
         }
     }
 

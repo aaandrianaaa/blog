@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using System;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Requests;
 using WebApi.ViewModel;
-//using static System.Collections.Specialized.BitVector32;
 
 namespace WebApi.Controllers
 {
@@ -27,7 +27,7 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async  Task<IActionResult> LoginAsync(Service.Models.TokenRequest request)
+        public async Task<IActionResult> LoginAsync(Service.Models.TokenRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -41,19 +41,10 @@ namespace WebApi.Controllers
                 return Ok(new LoginView()
                 {
                     Token = token
-                }); 
+                });
             }
 
             return BadRequest();
         }
-
-
-    
-
-    
-        
-      
-
-       
     }
 }

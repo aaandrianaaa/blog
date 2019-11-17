@@ -45,6 +45,12 @@ namespace WebApi.Controllers
             }
 
             var mapUser = AutoMapper.Mapper.Map<User>(request);
+
+            if (request.Password != request.ConfirmPassword)
+            {
+                return BadRequest();
+            }
+
             if (await _userService.CreateAsync(mapUser))
             {
                 return Ok();
@@ -52,7 +58,7 @@ namespace WebApi.Controllers
 
             return BadRequest();
         }
-    
+
         [AllowAnonymous]
         [HttpPost("confirm/resend")]
         public async Task<IActionResult> ResendConfirmationMail(EmailRequest request)
@@ -126,9 +132,9 @@ namespace WebApi.Controllers
             return Ok(mapUser);
         }
 
-        [Authorize(Roles ="Moderator, Admin")]
+        [Authorize(Roles = "Moderator, Admin")]
         [HttpPost("{id}/block")]
-        public async Task<IActionResult> BlockUser (int id)
+        public async Task<IActionResult> BlockUser(int id)
 
         {
             if (!await _userService.BlockUserAsync(id)) return BadRequest();
@@ -148,7 +154,7 @@ namespace WebApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> UsersList([FromQuery]Paginating request)
         {
-            
+
             var users = await _userService.UsersList(request.Limit, request.Page);
             var mapUsers = AutoMapper.Mapper.Map<List<UsersView>>(users);
             return Ok(mapUsers);
@@ -156,13 +162,21 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost("photo")]
-        public async Task <IActionResult> PostPhotoAsync(IFormFile file)
+        public async Task<IActionResult> PostPhotoAsync(IFormFile file)
         {
             var userID = User.Claims.GetUserId();
             if (userID == null) return BadRequest();
             if (!await _userService.PostPhotoAsync(file, userID)) return BadRequest();
             return Ok();
-           
+
+        }
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> MyPage()
+        {
+            var userID = User.Claims.GetUserId();
+            var user = await _userService.MeAsync(userID);
+            return Ok(user);
         }
     }
 }

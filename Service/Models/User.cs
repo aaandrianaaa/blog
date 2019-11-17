@@ -28,6 +28,7 @@ namespace Service.Models
         [Column(name: "password")]
         [JsonIgnore]
         public string Password { get; set; }
+
         [Column(name: "age")]
         public int? Age { get; set; }
         [Column(name: "birthday_date")]
